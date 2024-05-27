@@ -6,57 +6,48 @@ const Categories = () => {
   const categoriasDeMuestra: ICategoria[] = [
     {
       id: 1,
-      denominacion: "CATEGORIA 1",
+      denominacion: "Pizzas",
       subCategorias: [],
       sucursal: "SUCURSAL 1",
       eliminado: false,
       imagen:
-        "https://assets.tmecosys.com/image/upload/t_web767x639/img/recipe/ras/Assets/ecaeb2cc-a950-4645-a648-9137305b3287/Derivates/df977b90-193d-49d4-a59d-8dd922bcbf65.jpg",
+        "https://img.freepik.com/foto-gratis/pizza-margarita-mesa_140725-1201.jpg?t=st=1716836480~exp=1716840080~hmac=65658fe9b871c5d4ffc8aa1663c2ec0b10179c0f5ef1bc881ed34af5ce28c184&w=740",
     },
     {
       id: 2,
-      denominacion: "CATEGORIA 2",
+      denominacion: "Hamburguesas",
       subCategorias: [],
       sucursal: "SUCURSAL 1",
       eliminado: false,
       imagen:
-        "https://assets.tmecosys.com/image/upload/t_web767x639/img/recipe/ras/Assets/ecaeb2cc-a950-4645-a648-9137305b3287/Derivates/df977b90-193d-49d4-a59d-8dd922bcbf65.jpg",
+        "https://img.freepik.com/foto-gratis/bodegon-deliciosa-hamburguesa-americana_23-2149637306.jpg?t=st=1716836549~exp=1716840149~hmac=77bfcd7ecf3c4816b8822db0876df3af386f1d142bda9d5c2c7d8c7115ae8b63&w=740",
     },
     {
       id: 3,
-      denominacion: "CATEGORIA 3",
+      denominacion: "Sandwiches",
       subCategorias: [],
       sucursal: "SUCURSAL 1",
       eliminado: false,
       imagen:
-        "https://assets.tmecosys.com/image/upload/t_web767x639/img/recipe/ras/Assets/ecaeb2cc-a950-4645-a648-9137305b3287/Derivates/df977b90-193d-49d4-a59d-8dd922bcbf65.jpg",
+        "https://img.freepik.com/foto-gratis/cesta-picnic-sandwich-delicioso-baguette-pollo_1147-503.jpg?t=st=1716836672~exp=1716840272~hmac=992399c21349e692eacbcc26021d71f9548093b84f9346628c5264ce14d60e66&w=740",
     },
     {
       id: 4,
-      denominacion: "CATEGORIA 4",
+      denominacion: "Papas fritas",
       subCategorias: [],
       sucursal: "SUCURSAL 1",
       eliminado: false,
       imagen:
-        "https://assets.tmecosys.com/image/upload/t_web767x639/img/recipe/ras/Assets/ecaeb2cc-a950-4645-a648-9137305b3287/Derivates/df977b90-193d-49d4-a59d-8dd922bcbf65.jpg",
+        "https://img.freepik.com/foto-gratis/patatas-fritas-ketchup-mahonesa_123827-22130.jpg?t=st=1716836749~exp=1716840349~hmac=0428c4b19bf060cee5ff1c90d5079c57d50186018ac1306decf8550557bfe876&w=740",
     },
     {
       id: 5,
-      denominacion: "CATEGORIA 5",
+      denominacion: "Bebidas",
       subCategorias: [],
       sucursal: "SUCURSAL 1",
       eliminado: false,
       imagen:
-        "https://assets.tmecosys.com/image/upload/t_web767x639/img/recipe/ras/Assets/ecaeb2cc-a950-4645-a648-9137305b3287/Derivates/df977b90-193d-49d4-a59d-8dd922bcbf65.jpg",
-    },
-    {
-      id: 6,
-      denominacion: "CATEGORIA 6",
-      subCategorias: [],
-      sucursal: "SUCURSAL 1",
-      eliminado: false,
-      imagen:
-        "https://assets.tmecosys.com/image/upload/t_web767x639/img/recipe/ras/Assets/ecaeb2cc-a950-4645-a648-9137305b3287/Derivates/df977b90-193d-49d4-a59d-8dd922bcbf65.jpg",
+        "https://img.freepik.com/foto-gratis/bebidas-gaseosas-coloridas-macro-disparo_53876-18225.jpg?t=st=1716836796~exp=1716840396~hmac=c67e39dafc477a1545d9ebd5e7297d57cf923dc1c844c196cd27e562fef14e62&w=740",
     },
   ];
 
