@@ -1,14 +1,8 @@
-
-import './App.css'
-import { Home } from './components/screens/Home'
+import { AppRouter } from "./routes/AppRouter";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
-
-  return (
-    <>
-      <Home />
-    </>
-  )
+  return <AppRouter />;
 }
 
-export default App
+export default App;
