@@ -1,0 +1,39 @@
+
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 16px;
+    background-color: #fafafa;
+    border-radius: 16px;
+    box-shadow: 5px 5px 10px #d9d9d9, -5px -5px 10px #ffffff;
+    padding: 24px;
+  }
+.card-container {
+    display: flex;
+    justify-content: center;
+    flex: 1 1 calc(33.333% - 20px); /* 3 cartas por fila, ajustando el espacio del padding */
+    box-sizing: border-box; /* Para incluir el padding en el tamaño total del contenedor */
+    margin: 10px; /* Espacio entre las cartas */
+    padding: 10px; /* Padding interno de las cartas */
+    max-width: calc(33.333% - 20px); /* Para asegurar que no se exceda el ancho de 3 cartas por fila */
+  }
+  
+  .card-container > * {
+    padding: 10px;
+    max-width: 100%;
+  }
+  
+  @media (max-width: 768px) {
+    .card-container {
+      flex: 1 1 calc(50% - 20px); /* 2 cartas por fila en pantallas medianas */
+      max-width: calc(50% - 20px); /* Para asegurar que no se exceda el ancho de 2 cartas por fila */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .card-container {
+      flex: 1 1 100%; /* 1 carta por fila en pantallas pequeñas */
+      max-width: 100%; /* Para asegurar que no se exceda el ancho de 1 carta por fila */
+    }
+  }
