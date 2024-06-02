@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { CategoriaService } from "../../../services/CategoriaService";
 import { ICategoria } from "../../../types/ICategoria";
 import { CardCategoria } from "../../ui/Card/Card";
 import "./Categories.css";
@@ -51,15 +53,34 @@ const Categories = () => {
     },
   ];
 
+  const [categorias, setCategorias] = useState<ICategoria[]>([]);
+
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  const categoriaService = new CategoriaService(API_URL + "/categoria");
+
+  useEffect(() => {
+    const getCategorias = async () => {
+      const categoriasFetch: ICategoria[] = await fetch(`${API_URL}/sucursal/1/categorias`).then((response) => response.json());
+      if (categoriasFetch) {
+        setCategorias(categoriasFetch);
+      }
+    }
+    getCategorias();
+  }, [])
+
   return (
     <>
       <p className="title">Nuestros productos</p>
       <div className="cards-container">
-        {categoriasDeMuestra.map((categoria) => (
-          <div key={categoria.id} className="card-container">
-            <CardCategoria categoria={categoria} />
-          </div>
-        ))}
+        {categorias
+          .filter((categoria) => categoria.eliminado !== true) //TODO: Preguntar al Gabi si tenemos endpoint para filtrar categorias que sean para mostrar
+          .map((categoria) => (
+            <div key={categoria.id} className="card-container">
+              <CardCategoria categoria={categoria} />
+            </div>
+          ))}
+
       </div>
     </>
   );

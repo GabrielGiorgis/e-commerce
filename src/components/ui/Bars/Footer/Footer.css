@@ -1,19 +1,22 @@
 .footer-container {
-  background-color: rgba(110, 0, 0, 0.8);
-  padding: 20px 0;
-  margin-top: 40px;
+    background-color: rgba(110, 0, 0, 0.8);
+    padding: 20px 0;
+    margin-top: 40px;
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
 }
 
 .footer-text {
-  text-align: center;
+    text-align: center;
 }
 
 .footer-title {
-  font-size: 20px;
-  color: white;
-  margin-bottom: 10px;
+    font-size: 20px;
+    color: white;
+    margin-bottom: 10px;
 }
 
 .footer-subtitle {
-  color: rgba(247, 165, 165, 0.8);
+    color: rgba(247, 165, 165, 0.8);
 }

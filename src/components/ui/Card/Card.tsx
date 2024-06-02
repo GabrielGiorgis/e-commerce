@@ -75,10 +75,10 @@ interface ICardCategoria {
   categoria: ICategoria;
 }
 export const CardCategoria = ({ categoria }: ICardCategoria) => {
-  //   const navigate = useNavigate();
-  //   const handleSelect = (id: number) => {
-  //     navigate("/articulos/" + id);
-  //   };
+  const navigate = useNavigate();
+  const handleSelect = (id: number) => {
+    navigate("/articulos/" + id);
+  };
   return (
     <>
       <Box
@@ -91,7 +91,7 @@ export const CardCategoria = ({ categoria }: ICardCategoria) => {
             width: "100%",
           }}
         >
-          <ImageSrc style={{ backgroundImage: `url(${categoria.imagen})` }} />
+          <ImageSrc style={{ backgroundImage: `url(${categoria.imagen ? categoria.imagen : "../../category-default.png"})` }} />
           <ImageBackdrop className="MuiImageBackdrop-root" />
           <Image>
             <Typography
