@@ -74,15 +74,17 @@ const ImageMarked = styled("span")(({ theme }) => ({
 interface ICardCategoria {
   categoria: ICategoria;
 }
+
 export const CardCategoria = ({ categoria }: ICardCategoria) => {
   const navigate = useNavigate();
   const handleSelect = (id: number) => {
-    navigate("/articulos/" + id);
+    navigate(`/categoria/${id}/articulos`);
   };
   return (
     <>
       <Box
         sx={{ display: "flex", flexWrap: "wrap", minWidth: 300, width: "100%" }}
+        onClick={() => handleSelect(categoria.id)}
       >
         <ImageButton
           focusRipple

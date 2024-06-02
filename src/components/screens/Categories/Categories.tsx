@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { CategoriaService } from "../../../services/CategoriaService";
+//import { CategoriaService } from "../../../services/CategoriaService";
 import { ICategoria } from "../../../types/ICategoria";
 import { CardCategoria } from "../../ui/Card/Card";
 import "./Categories.css";
+import { useNavigate } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_URL;
 const Categories = () => {
   const categoriasDeMuestra: ICategoria[] = [
     {
@@ -55,9 +57,7 @@ const Categories = () => {
 
   const [categorias, setCategorias] = useState<ICategoria[]>([]);
 
-  const API_URL = import.meta.env.VITE_API_URL;
-
-  const categoriaService = new CategoriaService(API_URL + "/categoria");
+  //const categoriaService = new CategoriaService(API_URL + "/categoria");
 
   useEffect(() => {
     const getCategorias = async () => {

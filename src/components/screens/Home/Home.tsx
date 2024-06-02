@@ -14,9 +14,7 @@ export const Home = () => {
         <Loader />
       ) : (
         <>
-          <Header />
           <Categories />
-          <Footer />
         </>
       )}
     </div>
