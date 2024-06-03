@@ -4,13 +4,6 @@ import { ProductItem } from "../ProductItem/ProductItem"
 import { useParams } from "react-router-dom";
 import "./ProductsList.css";
 
-const ArticulosDeMuestra: IArticulo[] = [
-    {id: 1, denominacion: "Producto 1", precioVenta: Math.random() * 100, imagenes: []},
-    {id: 2, denominacion: "Producto 2", precioVenta: Math.random() * 100, imagenes: []},
-    {id: 3, denominacion: "Producto 3", precioVenta: Math.random() * 100, imagenes: []},
-    {id: 4, denominacion: "Producto 4", precioVenta: Math.random() * 100, imagenes: []},
-    {id: 5, denominacion: "Producto 5", precioVenta: Math.random() * 100, imagenes: []},
-]
 const API_URL = import.meta.env.VITE_API_URL;
 const ProductsList = () => {
   const [articulos, setArticulos] = useState<IArticulo[]>([]);
@@ -27,9 +20,11 @@ const ProductsList = () => {
   }, []);
 
   return (
-    <div>
+    <div className="products-list-container">
+      {/* <h1 className="title">{articulos[0]?.categoria.denominacion}</h1> */}
+      <h1 className="title">Categoría</h1>
       <ul className="products-list">
-        {articulos.map((articulo, index) => (
+        {articulos.map((articulo) => (
             <ProductItem product={articulo} />
         ))}
       </ul>

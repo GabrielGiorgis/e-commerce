@@ -4,5 +4,6 @@ export interface ICategoria{
     denominacion: string
     subCategorias: ICategoria[]
     sucursal: string
+    esParaElaborar: boolean
     imagen: string
 }
