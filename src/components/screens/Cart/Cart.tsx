@@ -113,8 +113,6 @@ export function Cart() {
       idEmpleado: 1,
       detallePedidos: detallesPedido
     };
-
-    console.log(detallesPedido);
     try {
       pedidoService.post(pedido);
       cleanCart();
@@ -124,8 +122,8 @@ export function Cart() {
     }
   };
 
-  const [Envio, setEnvio] = useState("");
-  const [Pago, setPago] = useState("");
+  const [Envio, setEnvio] = useState<string>("");
+  const [Pago, setPago] = useState<string>("");
 
   return (
     <div className="cart-container">
@@ -162,14 +160,14 @@ export function Cart() {
           <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
             <div>
               <label htmlFor="tipoEnvio">Tipo de envío:</label>
-              <select id="tipoEnvio" name="tipoEnvio" onChange={(e) => setEnvio(e.target.value)}>
+              <select id="tipoEnvio" name="tipoEnvio" value={Envio} onChange={(e) => setEnvio(e.target.value)}>
                 <option value="DELIVERY">Delivery</option>
                 <option value="TAKE_AWAY">Take away</option>
               </select>
             </div>
             <div>
               <label htmlFor="formaPago">Forma de pago:</label>
-              <select id="formaPago" name="formaPago" onChange={(e) => setPago(e.target.value)}>
+              <select id="formaPago" name="formaPago" value={Pago} onChange={(e) => setPago(e.target.value)}>
                 <option value="EFECTIVO">Efectivo</option>
                 <option value="MERCADO_PAGO">Mercado pago</option>
               </select>
