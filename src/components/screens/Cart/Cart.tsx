@@ -26,12 +26,13 @@ function CartItem({
   addToCart: (item: IArticuloCart) => void;
   removeItemFromCart: (item: IArticuloCart) => void;
 }) {
+
+  
   useEffect(() => {
     if (item.amount == 0) {
       decreaseAmount(item);
     }
   }, [item.amount]);
-
   return (
     <div className="cart-item" key={item.id}>
       { }
@@ -73,6 +74,7 @@ export function Cart() {
       0
     );
 
+
     const detallesPedido: IDetallePedidoPost[] = cart.map((product) => ({
       cantidad: product.amount,
       subTotal: product.precioVenta * product.amount,
@@ -93,8 +95,8 @@ export function Cart() {
       total: detallesPedido.reduce((total, item) => total + item.subTotal, 0),
       totalCosto: costo,
       estado: "PREPARACION",
-      tipoEnvio: "DELIVERY",
-      formaPago: "MERCADO_PAGO",
+      tipoEnvio: Envio,
+      formaPago: Pago,
       fechaPedido: new Date().toISOString(),
       idDomicilio: 1,
       idSucursal: 1,
@@ -121,6 +123,9 @@ export function Cart() {
       console.error(error);
     }
   };
+
+  const [Envio, setEnvio] = useState("");
+  const [Pago, setPago] = useState("");
 
   return (
     <div className="cart-container">
@@ -154,6 +159,22 @@ export function Cart() {
                 )
             )}
           </ul>
+          <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
+            <div>
+              <label htmlFor="tipoEnvio">Tipo de envío:</label>
+              <select id="tipoEnvio" name="tipoEnvio" onChange={(e) => setEnvio(e.target.value)}>
+                <option value="DELIVERY">Delivery</option>
+                <option value="TAKE_AWAY">Take away</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="formaPago">Forma de pago:</label>
+              <select id="formaPago" name="formaPago" onChange={(e) => setPago(e.target.value)}>
+                <option value="EFECTIVO">Efectivo</option>
+                <option value="MERCADO_PAGO">Mercado pago</option>
+              </select>
+            </div>
+          </div>
           <button
             onClick={() => handleCreate(cart)}
             className="cart-button cart-button-solid">
