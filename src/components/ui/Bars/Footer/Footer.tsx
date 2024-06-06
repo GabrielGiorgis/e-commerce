@@ -21,7 +21,7 @@ export const Footer = () => {
             variant="subtitle1"
             className="footer-subtitle"
           >
-            {`React | Redux | Material UI | React Router`}
+            {/* {`React | Redux | Material UI | React Router`} */}
           </Typography>
         </Grid>
       </Grid>

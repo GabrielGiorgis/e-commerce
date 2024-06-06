@@ -13,7 +13,7 @@
 .products_list_container {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Ajusta para alinear los elementos al principio */
+  justify-content: flex-start;
   padding: 20px;
   box-sizing: border-box;
   flex: 1;
@@ -22,11 +22,40 @@
 .products-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 10px; /* Añade un gap para el espacio entre los elementos */
+  gap: 10px;
   padding: 20px;
   margin: 0;
   list-style: none;
   width: 100%;
   box-sizing: border-box;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0px 20px;
+}
+
+.search-input {
+  margin-right: 1rem;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.sort-dropdown {
+  display: flex;
+  align-items: center;
+}
+
+.sort-dropdown label {
+  margin-right: 0.5rem;
+}
+
+.sort-dropdown select {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
