@@ -11,7 +11,7 @@ export interface IPedidoPost {
     formaPago: string,
     fechaPedido: string,
 
-    domicilio: IDomicilioPost,
+    idDomicilio: number,
     idSucursal: number,
     factura: IFactura,
     idCliente: number,

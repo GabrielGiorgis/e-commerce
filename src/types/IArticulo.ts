@@ -5,4 +5,5 @@ export interface IArticulo {
     denominacion: string
     precioVenta: number
     imagenes: IImagenArticulo[]
+    precioCompra: number
 }

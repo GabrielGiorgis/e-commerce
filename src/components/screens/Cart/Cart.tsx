@@ -9,6 +9,11 @@ import { CheckoutMP } from "../../checkout/CheckoutMP";
 import "./StyleSheets/StyleCart.css";
 import React, { useEffect, useState } from "react";
 import { IPedidoPost } from "../../../types/Pedido/IPedidoPost";
+import { IDetallePedidoPost } from "../../../types/DetallePedido/IDetallePedidoPost";
+import { PedidoService } from "../../../services/PedidoService";
+
+const API_URL = import.meta.env.VITE_API_URL;
+const pedidoService = new PedidoService(API_URL + "/pedido");
 
 function CartItem({
   item,
@@ -21,15 +26,16 @@ function CartItem({
   addToCart: (item: IArticuloCart) => void;
   removeItemFromCart: (item: IArticuloCart) => void;
 }) {
+
+  
   useEffect(() => {
     if (item.amount == 0) {
       decreaseAmount(item);
     }
   }, [item.amount]);
-
   return (
     <div className="cart-item" key={item.id}>
-      {}
+      { }
       <IconButton color="default" onClick={() => removeItemFromCart(item)}>
         <CloseIcon />
       </IconButton>
@@ -68,24 +74,33 @@ export function Cart() {
       0
     );
 
+
+    const detallesPedido: IDetallePedidoPost[] = cart.map((product) => ({
+      cantidad: product.amount,
+      subTotal: product.precioVenta * product.amount,
+      idArticulo: product.id
+    }));
+
+    const costo  = cart.map((products) => products.precioCompra * products.amount).reduce((total, item) => total + item, 0);
+
+    //FORMATEO DE HORA ACTUAL
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    const formattedTime = `${hours}:${minutes}:${seconds}`;
+
     const pedido: IPedidoPost = {
-      horaEstimadaFinalizacion: new Date().toISOString(),
-      total: total,
-      totalCosto: total,
+      horaEstimadaFinalizacion: formattedTime, //HORA FORMATEADA
+      total: detallesPedido.reduce((total, item) => total + item.subTotal, 0),
+      totalCosto: costo,
       estado: "PREPARACION",
-      tipoEnvio: "DELIVERY",
-      formaPago: "MERCADO_PAGO",
+      tipoEnvio: Envio,
+      formaPago: Pago,
       fechaPedido: new Date().toISOString(),
-      domicilio: {
-        calle: "Calle falsa 123",
-        localidad: "Springfield",
-        provincia: "Springfield",
-        pais: "USA",
-        codigoPostal: "1234",
-      },
+      idDomicilio: 1,
       idSucursal: 1,
       factura: {
-        id: 1,
         fechaFacturacion: new Date().toISOString(),
         totalVenta: total,
         mpPaymentId: 1,
@@ -95,25 +110,20 @@ export function Cart() {
         formaPago: "MERCADO_PAGO",
       },
       idCliente: 1,
-      // detallePedido
+      idEmpleado: 1,
+      detallePedidos: detallesPedido
     };
-
-    const detallesPedido = products.map((product) => ({
-      cantidad: product.amount,
-      articulo: product,
-      pedido: pedido,
-    }));
-
-    console.log(detallesPedido);
     try {
-      for (const detalle of detallesPedido) {
-      }
+      pedidoService.post(pedido);
       cleanCart();
       alert("Se ha creado el pedido con éxito.");
     } catch (error) {
       console.error(error);
     }
   };
+
+  const [Envio, setEnvio] = useState<string>("");
+  const [Pago, setPago] = useState<string>("");
 
   return (
     <div className="cart-container">
@@ -147,6 +157,22 @@ export function Cart() {
                 )
             )}
           </ul>
+          <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
+            <div>
+              <label htmlFor="tipoEnvio">Tipo de envío:</label>
+              <select id="tipoEnvio" name="tipoEnvio" value={Envio} onChange={(e) => setEnvio(e.target.value)}>
+                <option value="DELIVERY">Delivery</option>
+                <option value="TAKE_AWAY">Take away</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="formaPago">Forma de pago:</label>
+              <select id="formaPago" name="formaPago" value={Pago} onChange={(e) => setPago(e.target.value)}>
+                <option value="EFECTIVO">Efectivo</option>
+                <option value="MERCADO_PAGO">Mercado pago</option>
+              </select>
+            </div>
+          </div>
           <button
             onClick={() => handleCreate(cart)}
             className="cart-button cart-button-solid">
