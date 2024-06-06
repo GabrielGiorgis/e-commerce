@@ -14,6 +14,7 @@
     "@emotion/styled": "^11.11.5",
     "@mercadopago/sdk-react": "^0.0.19",
     "@mui/icons-material": "^5.15.18",
+    "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.15.18",
     "bootstrap": "^5.3.3",
     "react": "^18.2.0",
