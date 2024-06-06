@@ -1,23 +1,22 @@
 /* Footer.css */
 
 .footer-container {
-  background-color: rgba(110, 0, 0, 0.8);
-  padding: 20px 0;
-  margin-top: 40px;
-  width: 100%; /* Usa 100% en lugar de 100vw para evitar desbordamientos */
-  position: relative; /* Cambia a relative o static */
+    background-color: rgba(110, 0, 0, 0.8);
+    padding: 20px 0;
+    width: 100%;
+    position: relative;
 }
 
 .footer-text {
-  text-align: center;
+    text-align: center;
 }
 
 .footer-title {
-  font-size: 20px;
-  color: white;
-  margin-bottom: 10px;
+    font-size: 20px;
+    color: white;
+    margin-bottom: 10px;
 }
 
 .footer-subtitle {
-  color: rgba(247, 165, 165, 0.8);
+    color: rgba(247, 165, 165, 0.8);
 }

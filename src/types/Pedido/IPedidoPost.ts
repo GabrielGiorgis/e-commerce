@@ -1,0 +1,20 @@
+import { IDetallePedidoPost } from "../DetallePedido/IDetallePedidoPost";
+import { IDomicilioPost } from "../Domicilio/IDomicilioPost";
+import { IFactura } from "../Factura/IFactura";
+
+export interface IPedidoPost {
+    horaEstimadaFinalizacion: string,
+    total: number,
+    totalCosto: number,
+    estado: string,
+    tipoEnvio: string,
+    formaPago: string,
+    fechaPedido: string,
+
+    domicilio: IDomicilioPost,
+    idSucursal: number,
+    factura: IFactura,
+    idCliente: number,
+    detallePedidos: IDetallePedidoPost[],
+    idEmpleado: number
+}
