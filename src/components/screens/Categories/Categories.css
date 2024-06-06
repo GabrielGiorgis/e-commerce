@@ -1,39 +1,39 @@
 .title {
-  font-size: 2.5rem;
-  font-weight: bold;
-  text-align: center;
-  margin: 1rem 0;
-  color: rgba(110, 0, 0, 0.8);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  text-shadow: 1px 1px 2px rgba(51, 0, 0, 0.8);
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    /* margin: 1rem 0; */
+    color: rgba(110, 0, 0, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 2px rgba(51, 0, 0, 0.8);
 }
 
 .cards-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  grid-gap: 20px;
-  padding: 20px;
-  height: 100%;
-  width: 100%;
-  position: relative;
-  left: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-gap: 20px;
+    padding: 20px;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    left: 0;
 }
 
 .card-container {
-  width: 100%;
-  padding: 10px;
-  margin: 0;
-  justify-content: center;
-  align-items: center;
-  display: flex;
+    width: 100%;
+    padding: 10px;
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+    display: flex;
 }
 
 @media (max-width: 768px) {
-  .cards-container {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  }
-  .title {
-    font-size: 1.5rem;
-  }
+    .cards-container {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+    .title {
+        font-size: 1.5rem;
+    }
 }

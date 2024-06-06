@@ -5,6 +5,7 @@ import "./ProductItem.css";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import DescriptionIcon from "@mui/icons-material/Description";
 import { IconButton } from "@mui/material";
+import { useCart } from "../../../hooks/useCart";
 
 interface IProductItem {
   product: IArticulo;
@@ -12,14 +13,17 @@ interface IProductItem {
 export const ProductItem = ({ product }: IProductItem) => {
   const [openModal, setOpenModal] = React.useState(false);
 
+  const { addToCart } = useCart();
+
   return (
     <>
       <div className="card">
-        <img
-          className="card-img"
-          src={product.imagenes[0].url}
-          alt={product.imagenes[0].name}
-        />
+        <div className="card-img">
+          <img
+            src={product.imagenes[0].url}
+            alt={product.imagenes[0].name}
+          />
+        </div>
         <div className="card-info">
           <p className="text-title">{product.denominacion}</p>
           {/* <p className="text-body">{product.descripcion}</p> */}
@@ -31,17 +35,16 @@ export const ProductItem = ({ product }: IProductItem) => {
         </div>
         <div className="card-footer">
           <span className="text-title">${product.precioVenta.toFixed(2)}</span>
-          <IconButton>
+          <IconButton onClick={() => setOpenModal(true)}>
             <DescriptionIcon
               className="card-button"
-              onClick={() => setOpenModal(true)}
             />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={() => { addToCart({ ...product, amount: 1 }) }}>
             <ShoppingCartIcon className="card-button" />
           </IconButton>
         </div>
-      </div>
+      </div >
       <ModalProduct
         product={product}
         openModal={openModal}

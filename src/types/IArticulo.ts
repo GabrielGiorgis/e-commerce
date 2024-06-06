@@ -1,6 +1,6 @@
 import { IImagenArticulo } from "./IImagen"
 
-export interface IArticulo{
+export interface IArticulo {
     id: number
     denominacion: string
     precioVenta: number

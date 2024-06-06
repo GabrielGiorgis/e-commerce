@@ -7,10 +7,10 @@ import "./ProductsList.css";
 const API_URL = import.meta.env.VITE_API_URL;
 const ProductsList = () => {
   const [articulos, setArticulos] = useState<IArticulo[]>([]);
-  const idCategoria = useParams().id;
+  const id = useParams().id;
 
   const fetchData = async () => {
-    const response = await fetch(`${API_URL}/categoria/${idCategoria}/articulos`);
+    const response = await fetch(`${API_URL}/categoria/${id}/articulos`);
     const data = await response.json();
     setArticulos(data);
   };
@@ -24,8 +24,8 @@ const ProductsList = () => {
       {/* <h1 className="title">{articulos[0]?.categoria.denominacion}</h1> */}
       <h1 className="title">Categoría</h1>
       <ul className="products-list">
-        {articulos.map((articulo) => (
-            <ProductItem product={articulo} />
+        {articulos.map((articulo, index) => (
+          <ProductItem key={index} product={articulo} />
         ))}
       </ul>
     </div>
