@@ -79,7 +79,7 @@ export function Cart() {
       idArticulo: product.id
     }));
 
-    const costoPedido : number = cart.map((product) => product.precioVenta * product.amount).reduce((total, item) => total + item, 0);
+    const costo  = cart.map((products) => products.precioCompra * products.amount).reduce((total, item) => total + item, 0);
 
     //FORMATEO DE HORA ACTUAL
     const now = new Date();
@@ -89,9 +89,9 @@ export function Cart() {
     const formattedTime = `${hours}:${minutes}:${seconds}`;
 
     const pedido: IPedidoPost = {
-      horaEstimadaFinalizacion: formattedTime,
+      horaEstimadaFinalizacion: formattedTime, //HORA FORMATEADA
       total: detallesPedido.reduce((total, item) => total + item.subTotal, 0),
-      totalCosto: total,
+      totalCosto: costo,
       estado: "PREPARACION",
       tipoEnvio: "DELIVERY",
       formaPago: "MERCADO_PAGO",
