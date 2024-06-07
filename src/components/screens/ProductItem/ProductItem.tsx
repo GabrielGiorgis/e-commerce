@@ -41,9 +41,7 @@ export const ProductItem = ({ product }: IProductItem) => {
         <div className="card-info">
           <p className="text-title">{product.denominacion}</p>
           <p className="text-body">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
-            bibendum odio sed urna ornare varius. Donec sit amet nisi id tellus
-            imperdiet cursus sed at lacus.
+
           </p>
         </div>
         <div className="card-footer">

@@ -82,12 +82,12 @@ export function Cart() {
     }));
 
     const costo  = cart.map((products) => products.precioCompra * products.amount).reduce((total, item) => total + item, 0);
-
     //FORMATEO DE HORA ACTUAL
     const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
+    const future = new Date(now.getTime() + 30 * 60 * 1000);
+    const hours = future.getHours().toString().padStart(2, '0');
+    const minutes = future.getMinutes().toString().padStart(2, '0');
+    const seconds = future.getSeconds().toString().padStart(2, '0');
     const formattedTime = `${hours}:${minutes}:${seconds}`;
 
     const pedido: IPedidoPost = {
@@ -114,6 +114,7 @@ export function Cart() {
       detallePedidos: detallesPedido
     };
     try {
+      console.log(pedido);
       pedidoService.post(pedido);
       cleanCart();
       alert("Se ha creado el pedido con éxito.");
@@ -122,8 +123,8 @@ export function Cart() {
     }
   };
 
-  const [Envio, setEnvio] = useState<string>("");
-  const [Pago, setPago] = useState<string>("");
+  const [Envio, setEnvio] = useState<string>("DELIVERY");
+  const [Pago, setPago] = useState<string>("EFECTIVO");
 
   return (
     <div className="cart-container">
