@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { IArticulo } from "../../../types/IArticulo";
 import { ProductItem } from "../ProductItem/ProductItem";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./ProductsList.css";
 import { ICategoria } from "../../../types/ICategoria";
 import { Loader } from "../../ui/Loader/Loader";
 import { Breadcrumbs, Link, Typography } from "@mui/material";
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -17,6 +17,8 @@ const ProductsList = () => {
   const [sortOrder, setSortOrder] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const id = useParams().id;
+
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     const response = await fetch(`${API_URL}/categoria/${id}/articulos`);
@@ -66,9 +68,8 @@ const ProductsList = () => {
       color="inherit"
       href="/"
       onClick={() => {
-        window.location.href = "/";
-      }}
-    >
+        navigate("/");
+      }}>
       Nuestros productos
     </Link>,
     <Typography key="3" color="text.primary">
@@ -85,8 +86,7 @@ const ProductsList = () => {
           <Breadcrumbs
             separator={<NavigateNextIcon fontSize="small" />}
             aria-label="breadcrumb"
-            sx={{ margin: "1rem" }}
-          >
+            sx={{ margin: "1rem" }}>
             {breadcrumbs}
           </Breadcrumbs>
           <h1 className="title">{categoria.denominacion}</h1>

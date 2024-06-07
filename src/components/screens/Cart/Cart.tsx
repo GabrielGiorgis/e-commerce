@@ -1,17 +1,26 @@
-import { Alert, AlertTitle, Box, IconButton } from "@mui/material";
+import {
+  Alert,
+  AlertTitle,
+  Box,
+  FormControlLabel,
+  IconButton,
+  Switch,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useCart } from "../../../hooks/useCart";
 import { IArticuloCart } from "../../../types/IArticuloCart";
 import CloseIcon from "@mui/icons-material/Close";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
-import { CheckoutMP } from "../../checkout/CheckoutMP";
+// import { CheckoutMP } from "../../checkout/CheckoutMP";
 import "./StyleSheets/StyleCart.css";
 import React, { useEffect, useState } from "react";
 import { IPedidoPost } from "../../../types/Pedido/IPedidoPost";
 import { IDetallePedidoPost } from "../../../types/DetallePedido/IDetallePedidoPost";
 import { PedidoService } from "../../../services/PedidoService";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const pedidoService = new PedidoService(API_URL + "/pedido");
@@ -65,10 +74,14 @@ function CartItem({
 export function Cart() {
   const { cart, addToCart, decreaseAmount, removeItemFromCart, cleanCart } =
     useCart();
+  const navigate = useNavigate();
+
+  const handleChange = (event) => {
+    setEnvio(event.target.checked ? "TAKE_AWAY" : "DELIVERY");
+  };
 
   const handleCreate = async (products: IArticuloCart[]) => {
     const total = products.reduce(
-      //TODO: Esto no está bien, preguntar que tipo de dato va acá
       (total: number, product: IArticuloCart) => total + product.precioVenta,
       0
     );
@@ -79,8 +92,9 @@ export function Cart() {
       idArticulo: product.id,
     }));
 
-    const costo = cart
-      .map((products) => products.precioCompra * products.amount)
+    //TODO: Esto no está bien, el precioCompra viene null
+    const costo = products
+      .map((product) => product.precioCompra * product.amount)
       .reduce((total, item) => total + item, 0);
 
     //FORMATEO DE HORA ACTUAL
@@ -95,7 +109,7 @@ export function Cart() {
       total: detallesPedido.reduce((total, item) => total + item.subTotal, 0),
       totalCosto: costo,
       estado: "PREPARACION",
-      tipoEnvio: Envio,
+      tipoEnvio: envio,
       formaPago: Pago,
       fechaPedido: new Date().toISOString(),
       idDomicilio: 1,
@@ -114,30 +128,41 @@ export function Cart() {
       detallePedidos: detallesPedido,
     };
     try {
-      pedidoService.post(pedido);
-      cleanCart();
-      // Alerta de pedido creado
-      <Alert severity="success">
-        <AlertTitle>Pedido creado</AlertTitle>
-        El pedido fue creado con éxito.
-      </Alert>;
-      // Redirección a la pantalla de inicio
-      redirect("/");
+      console.log(pedido);
+      await pedidoService.post(pedido);
+      setAlert({
+        type: "success",
+        message: "El pedido fue creado con exito.",
+      });
+      setTimeout(() => {
+        navigate("/");
+        cleanCart();
+      }, 5000);
     } catch (error) {
       console.error(error);
-      // Alerta de error
-      <Alert severity="error">
-        <AlertTitle>Error</AlertTitle>
-        Hubo un error al intentar crear el pedido.
-      </Alert>;
+      setAlert({
+        type: "error",
+        message: "Ocurrio un error al crear el pedido.",
+      });
     }
   };
 
-  const [Envio, setEnvio] = useState<string>("");
-  const [Pago, setPago] = useState<string>("");
+  const [envio, setEnvio] = useState<string>("DELIVERY");
+  const [Pago, setPago] = useState<string>("EFECTIVO");
+  const [alert, setAlert] = useState({ type: "", message: "" });
 
   return (
     <div className="cart-container">
+      {alert.type && (
+        <Stack sx={{ width: "100%" }} spacing={2}>
+          <Alert severity={alert.type === "success" ? "success" : "error"}>
+            <AlertTitle>
+              {alert.type === "success" ? "Pedido creado" : "Error"}
+            </AlertTitle>
+            {alert.message}
+          </Alert>
+        </Stack>
+      )}
       {cart.length > 0 ? (
         <>
           <div
@@ -145,14 +170,12 @@ export function Cart() {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-            }}
-          >
+            }}>
             <h2>Carrito</h2>
 
             <button
               onClick={cleanCart}
-              className="cart-button cart-button-border"
-            >
+              className="cart-button cart-button-border">
               Limpiar carrito
             </button>
           </div>
@@ -175,19 +198,21 @@ export function Cart() {
               display: "flex",
               justifyContent: "flex-start",
               alignItems: "center",
-            }}
-          >
+            }}>
             <div>
               <label htmlFor="tipoEnvio">Tipo de envío:</label>
-              <select
-                id="tipoEnvio"
-                name="tipoEnvio"
-                value={Envio}
-                onChange={(e) => setEnvio(e.target.value)}
-              >
-                <option value="DELIVERY">Delivery</option>
-                <option value="TAKE_AWAY">Take away</option>
-              </select>
+              <Box>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={envio === "TAKE_AWAY"}
+                      onChange={handleChange}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                  }
+                  label={envio === "DELIVERY" ? "Delivery" : "Take away"}
+                />
+              </Box>
             </div>
             <div>
               <label htmlFor="formaPago">Forma de pago:</label>
@@ -195,8 +220,7 @@ export function Cart() {
                 id="formaPago"
                 name="formaPago"
                 value={Pago}
-                onChange={(e) => setPago(e.target.value)}
-              >
+                onChange={(e) => setPago(e.target.value)}>
                 <option value="EFECTIVO">Efectivo</option>
                 <option value="MERCADO_PAGO">Mercado pago</option>
               </select>
@@ -204,8 +228,7 @@ export function Cart() {
           </div>
           <button
             onClick={() => handleCreate(cart)}
-            className="cart-button cart-button-solid"
-          >
+            className="cart-button cart-button-solid">
             Crear pedido
           </button>
           {/* <CheckoutMP montoCarrito={cart.reduce((total, product) => total + product.precioVenta, 0)} /> */}
@@ -220,8 +243,7 @@ export function Cart() {
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-            }}
-          >
+            }}>
             <RemoveShoppingCartIcon style={{ fontSize: "60px" }} />
             <p>No hay elementos en el carrito</p>
           </div>
