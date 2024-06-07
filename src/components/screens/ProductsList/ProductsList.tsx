@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import "./ProductsList.css";
 import { ICategoria } from "../../../types/ICategoria";
 import { Loader } from "../../ui/Loader/Loader";
+import { Breadcrumbs, Link, Typography } from "@mui/material";
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -57,12 +59,36 @@ const ProductsList = () => {
       }
     });
 
+  const breadcrumbs = [
+    <Link
+      underline="hover"
+      key="1"
+      color="inherit"
+      href="/"
+      onClick={() => {
+        window.location.href = "/";
+      }}
+    >
+      Nuestros productos
+    </Link>,
+    <Typography key="3" color="text.primary">
+      {categoria.denominacion}
+    </Typography>,
+  ];
+
   return (
     <>
       {isLoading ? (
         <Loader />
       ) : (
         <div className="products-list-container">
+          <Breadcrumbs
+            separator={<NavigateNextIcon fontSize="small" />}
+            aria-label="breadcrumb"
+            sx={{ margin: "1rem" }}
+          >
+            {breadcrumbs}
+          </Breadcrumbs>
           <h1 className="title">{categoria.denominacion}</h1>
           <div className="filters">
             <input

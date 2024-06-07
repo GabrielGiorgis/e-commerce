@@ -1,4 +1,4 @@
-import { Box, IconButton } from "@mui/material";
+import { Alert, AlertTitle, Box, IconButton } from "@mui/material";
 import { useCart } from "../../../hooks/useCart";
 import { IArticuloCart } from "../../../types/IArticuloCart";
 import CloseIcon from "@mui/icons-material/Close";
@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import { IPedidoPost } from "../../../types/Pedido/IPedidoPost";
 import { IDetallePedidoPost } from "../../../types/DetallePedido/IDetallePedidoPost";
 import { PedidoService } from "../../../services/PedidoService";
+import { redirect } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const pedidoService = new PedidoService(API_URL + "/pedido");
@@ -26,8 +27,6 @@ function CartItem({
   addToCart: (item: IArticuloCart) => void;
   removeItemFromCart: (item: IArticuloCart) => void;
 }) {
-
-  
   useEffect(() => {
     if (item.amount == 0) {
       decreaseAmount(item);
@@ -35,7 +34,7 @@ function CartItem({
   }, [item.amount]);
   return (
     <div className="cart-item" key={item.id}>
-      { }
+      {}
       <IconButton color="default" onClick={() => removeItemFromCart(item)}>
         <CloseIcon />
       </IconButton>
@@ -74,20 +73,21 @@ export function Cart() {
       0
     );
 
-
     const detallesPedido: IDetallePedidoPost[] = cart.map((product) => ({
       cantidad: product.amount,
       subTotal: product.precioVenta * product.amount,
-      idArticulo: product.id
+      idArticulo: product.id,
     }));
 
-    const costo  = cart.map((products) => products.precioCompra * products.amount).reduce((total, item) => total + item, 0);
+    const costo = cart
+      .map((products) => products.precioCompra * products.amount)
+      .reduce((total, item) => total + item, 0);
 
     //FORMATEO DE HORA ACTUAL
     const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    const seconds = now.getSeconds().toString().padStart(2, "0");
     const formattedTime = `${hours}:${minutes}:${seconds}`;
 
     const pedido: IPedidoPost = {
@@ -111,14 +111,25 @@ export function Cart() {
       },
       idCliente: 1,
       idEmpleado: 1,
-      detallePedidos: detallesPedido
+      detallePedidos: detallesPedido,
     };
     try {
       pedidoService.post(pedido);
       cleanCart();
-      alert("Se ha creado el pedido con éxito.");
+      // Alerta de pedido creado
+      <Alert severity="success">
+        <AlertTitle>Pedido creado</AlertTitle>
+        El pedido fue creado con éxito.
+      </Alert>;
+      // Redirección a la pantalla de inicio
+      redirect("/");
     } catch (error) {
       console.error(error);
+      // Alerta de error
+      <Alert severity="error">
+        <AlertTitle>Error</AlertTitle>
+        Hubo un error al intentar crear el pedido.
+      </Alert>;
     }
   };
 
@@ -134,12 +145,14 @@ export function Cart() {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-            }}>
+            }}
+          >
             <h2>Carrito</h2>
 
             <button
               onClick={cleanCart}
-              className="cart-button cart-button-border">
+              className="cart-button cart-button-border"
+            >
               Limpiar carrito
             </button>
           </div>
@@ -157,17 +170,33 @@ export function Cart() {
                 )
             )}
           </ul>
-          <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+            }}
+          >
             <div>
               <label htmlFor="tipoEnvio">Tipo de envío:</label>
-              <select id="tipoEnvio" name="tipoEnvio" value={Envio} onChange={(e) => setEnvio(e.target.value)}>
+              <select
+                id="tipoEnvio"
+                name="tipoEnvio"
+                value={Envio}
+                onChange={(e) => setEnvio(e.target.value)}
+              >
                 <option value="DELIVERY">Delivery</option>
                 <option value="TAKE_AWAY">Take away</option>
               </select>
             </div>
             <div>
               <label htmlFor="formaPago">Forma de pago:</label>
-              <select id="formaPago" name="formaPago" value={Pago} onChange={(e) => setPago(e.target.value)}>
+              <select
+                id="formaPago"
+                name="formaPago"
+                value={Pago}
+                onChange={(e) => setPago(e.target.value)}
+              >
                 <option value="EFECTIVO">Efectivo</option>
                 <option value="MERCADO_PAGO">Mercado pago</option>
               </select>
@@ -175,7 +204,8 @@ export function Cart() {
           </div>
           <button
             onClick={() => handleCreate(cart)}
-            className="cart-button cart-button-solid">
+            className="cart-button cart-button-solid"
+          >
             Crear pedido
           </button>
           {/* <CheckoutMP montoCarrito={cart.reduce((total, product) => total + product.precioVenta, 0)} /> */}
@@ -190,7 +220,8 @@ export function Cart() {
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-            }}>
+            }}
+          >
             <RemoveShoppingCartIcon style={{ fontSize: "60px" }} />
             <p>No hay elementos en el carrito</p>
           </div>
