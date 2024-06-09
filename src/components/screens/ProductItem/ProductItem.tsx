@@ -17,6 +17,7 @@ interface IProductItem {
 export const ProductItem = ({ product }: IProductItem) => {
   const [openModal, setOpenModal] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [disabled, setDisabled] = React.useState(false);
 
   const { cart, addToCart, decreaseAmount, removeItemFromCart } = useCart();
   const [item, setItem] = useState<IArticuloCart>(
@@ -32,17 +33,36 @@ export const ProductItem = ({ product }: IProductItem) => {
     }
   }, [item.amount]);
 
+  useEffect(() => {
+    verifyEliminado();
+  }, []);
+
+  const verifyEliminado = () => {
+    if (product.eliminado){
+      setDisabled(true)
+    }
+    product.articuloManufacturadoDetalles?.forEach(detalle => {
+      if (detalle.articuloInsumo.eliminado){
+        setDisabled(true)
+      }
+    });
+  }
+
   return (
     <>
-      <div className="card">
+      <div
+        className={
+          disabled
+            ? "card card-disabled"
+            : "card"
+        }
+      >
         <div className="card-img">
           <img src={product.imagenes[0].url} alt={product.imagenes[0].name} />
         </div>
         <div className="card-info">
           <p className="text-title">{product.denominacion}</p>
-          <p className="text-body">
-
-          </p>
+          <p className="text-body"></p>
         </div>
         <div className="card-footer">
           <span className="text-title">${product.precioVenta.toFixed(2)}</span>

@@ -43,7 +43,6 @@ export abstract class BackendClient<TG, TP, TE> extends AbstractBackendClient<
   }
 
   async put(id: number, data: TE): Promise<TG> {
-    console.log(this.baseUrl);
     const response = await fetch(`${this.baseUrl}/${id}`, {
       method: "PUT",
       headers: {
@@ -53,7 +52,6 @@ export abstract class BackendClient<TG, TP, TE> extends AbstractBackendClient<
       body: JSON.stringify(data),
     });
     const newData = await response.json();
-    return newData as TG;
     return newData as TG;
   }
 
