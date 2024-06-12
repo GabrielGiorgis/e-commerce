@@ -1,42 +1,37 @@
 import { useEffect, useState } from "react";
-import { IArticulo } from "../../../types/IArticulo";
-import { ProductItem } from "../ProductItem/ProductItem";
-import { useNavigate, useParams } from "react-router-dom";
-import "./ProductsList.css";
 import { ICategoria } from "../../../types/ICategoria";
 import { Loader } from "../../ui/Loader/Loader";
-import { Breadcrumbs, Link, Typography } from "@mui/material";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { ProductItem } from "../ProductItem/ProductItem";
+import "./AllProducts.css";
+import { IArticulo } from "../../../types/IArticulo";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const ProductsList = () => {
+const AllProducts = () => {
   const [articulos, setArticulos] = useState<IArticulo[]>([]);
-  const [categoria, setCategoria] = useState<ICategoria>({} as ICategoria);
+  const [categorias, setCategorias] = useState<ICategoria[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const id = useParams().id;
 
-  const navigate = useNavigate();
-
-  const fetchData = async () => {
-    const response = await fetch(`${API_URL}/categoria/${id}/articulos`);
+  const fetchArticulos = async () => {
+    setIsLoading(true);
+    const response = await fetch(`${API_URL}/articulo`);
     const data = await response.json();
     setArticulos(data);
     setIsLoading(false);
   };
 
-  const fetchCategoria = async () => {
-    const response = await fetch(`${API_URL}/categoria/${id}`);
+  const fetchCategorias = async () => {
+    const response = await fetch(`${API_URL}/categoria`);
     const data = await response.json();
-    setCategoria(data);
+    setCategorias(data);
   };
 
   useEffect(() => {
-    setIsLoading(true);
-    fetchData();
-    fetchCategoria();
+    fetchArticulos();
+    fetchCategorias();
   }, []);
 
   const handleSearchChange = (e) => {
@@ -47,9 +42,17 @@ const ProductsList = () => {
     setSortOrder(e.target.value);
   };
 
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+  };
+
   const filteredArticulos = articulos
-    .filter((articulo) =>
-      articulo.denominacion.toLowerCase().includes(searchTerm.toLowerCase())
+    .filter(
+      (articulo) =>
+        (selectedCategory
+          ? articulo.categoria.denominacion === selectedCategory
+          : true) &&
+        articulo.denominacion.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
       if (sortOrder === "asc") {
@@ -61,37 +64,13 @@ const ProductsList = () => {
       }
     });
 
-  const breadcrumbs = [
-    <Link
-      underline="hover"
-      key="1"
-      color="inherit"
-      href="/"
-      onClick={() => {
-        navigate("/");
-      }}
-    >
-      Nuestros productos
-    </Link>,
-    <Typography key="3" color="text.primary">
-      {categoria.denominacion}
-    </Typography>,
-  ];
-
   return (
     <>
       {isLoading ? (
         <Loader />
       ) : (
         <div className="products-list-container">
-          <Breadcrumbs
-            separator={<NavigateNextIcon fontSize="small" />}
-            aria-label="breadcrumb"
-            sx={{ margin: "1rem" }}
-          >
-            {breadcrumbs}
-          </Breadcrumbs>
-          <h1 className="title">{categoria.denominacion}</h1>
+          <h1 className="title">Todos los artículos</h1>
           <div className="filters">
             <input
               type="text"
@@ -100,6 +79,16 @@ const ProductsList = () => {
               onChange={handleSearchChange}
               className="search-input"
             />
+            <div className="category-dropdown">
+              <select value={selectedCategory} onChange={handleCategoryChange}>
+                <option value="">Todas las categorías</option>
+                {categorias.map((categoria) => (
+                  <option key={categoria.id} value={categoria.id}>
+                    {categoria.denominacion}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="sort-dropdown">
               <select value={sortOrder} onChange={handleSortChange}>
                 <option value="">Ordenar</option>
@@ -119,4 +108,4 @@ const ProductsList = () => {
   );
 };
 
-export default ProductsList;
+export default AllProducts;

@@ -9,9 +9,10 @@ import {
   MenuItem,
   Badge,
 } from "@mui/material";
-// import FastfoodIcon from "@mui/icons-material/Fastfood";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import LogoutIcon from '@mui/icons-material/Logout';
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
 import "./Header.css";
@@ -64,7 +65,8 @@ export default function Header() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Mi cuenta</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Mi cuenta</MenuItem> {/* TODO: Pantalla profile de ejemplo auth0 */}
+      <MenuItem onClick={handleMenuClose}>Pedidos</MenuItem> {/* TODO: Crear pantalla de pedidos del cliente */}
       <MenuItem onClick={handleMenuClose}>Cerrar sesión</MenuItem>
     </Menu>
   );
@@ -95,7 +97,7 @@ export default function Header() {
         </IconButton>
         <p style={{ margin: "0" }}>Carrito</p>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem>
         <IconButton
           size="large"
           aria-label="account of current user"
@@ -105,7 +107,31 @@ export default function Header() {
         >
           <AccountCircle />
         </IconButton>
-        <p style={{ margin: "0" }}>Mi cuenta</p>
+        <p style={{ margin: "0" }}>Mi cuenta</p> {/* TODO: Pantalla profile de ejemplo auth0 */}
+      </MenuItem>
+      <MenuItem>
+        <IconButton
+          size="large"
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <ReceiptLongIcon />
+        </IconButton>
+        <p style={{ margin: "0" }}>Pedidos</p> {/* TODO: Crear pantalla de pedidos del cliente */}
+      </MenuItem>
+      <MenuItem>
+        <IconButton
+          size="large"
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <LogoutIcon />
+        </IconButton>
+        <p style={{ margin: "0" }}>Cerrar sesión</p>
       </MenuItem>
     </Menu>
   );
@@ -139,13 +165,13 @@ export default function Header() {
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Box
-            onClick={() => navigate("/carrito")}
             sx={{ display: { xs: "none", md: "flex" } }}
           >
             <IconButton
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
+              onClick={() => navigate("/carrito")}
             >
               <Badge badgeContent={cart.length} color="error">
                 <ShoppingCartIcon />
