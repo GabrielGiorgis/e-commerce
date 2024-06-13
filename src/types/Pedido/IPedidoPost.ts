@@ -3,6 +3,7 @@ import { IDomicilioPost } from "../Domicilio/IDomicilioPost";
 import { IFactura } from "../Factura/IFactura";
 
 export interface IPedidoPost {
+    id? : number,
     horaEstimadaFinalizacion: string,
     total: number,
     totalCosto: number,

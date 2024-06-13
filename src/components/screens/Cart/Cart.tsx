@@ -21,6 +21,7 @@ import { IPedidoPost } from "../../../types/Pedido/IPedidoPost";
 import { IDetallePedidoPost } from "../../../types/DetallePedido/IDetallePedidoPost";
 import { PedidoService } from "../../../services/PedidoService";
 import { useNavigate } from "react-router-dom";
+import { CheckoutMp } from "./CheckoutMp";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const pedidoService = new PedidoService(API_URL + "/pedido");
@@ -76,8 +77,56 @@ export function Cart() {
     useCart();
   const navigate = useNavigate();
 
-  const handleChange = (event) => {
+  const handleChange = (event : React.ChangeEvent<HTMLInputElement>) => {
     setEnvio(event.target.checked ? "TAKE_AWAY" : "DELIVERY");
+  };
+
+  const handleFormatPedido = ( products: IArticuloCart[]) => {
+    const total = products.reduce(
+      (total: number, product: IArticuloCart) => total + product.precioVenta,
+      0
+    );
+
+    const detallesPedido: IDetallePedidoPost[] = cart.map((product) => ({
+      cantidad: product.amount,
+      subTotal: product.precioVenta * product.amount,
+      idArticulo: product.id,
+    }));
+
+    const costo  = cart.map((products) => products.precioCompra * products.amount).reduce((total, item) => total + item, 0);
+    //FORMATEO DE HORA ACTUAL
+    const now = new Date();
+    const future = new Date(now.getTime() + 30 * 60 * 1000);
+    const hours = future.getHours().toString().padStart(2, '0');
+    const minutes = future.getMinutes().toString().padStart(2, '0');
+    const seconds = future.getSeconds().toString().padStart(2, '0');
+    const formattedTime = `${hours}:${minutes}:${seconds}`;
+
+    const pedido: IPedidoPost = {
+      horaEstimadaFinalizacion: formattedTime, //HORA FORMATEADA
+      total: detallesPedido.reduce((total, item) => total + item.subTotal, 0),
+      totalCosto: costo,
+      estado: "PREPARACION",
+      tipoEnvio: envio,
+      formaPago: Pago,
+      fechaPedido: new Date().toISOString(),
+      idDomicilio: 1,
+      idSucursal: 1,
+      factura: {
+        fechaFacturacion: new Date().toISOString(),
+        totalVenta: total,
+        mpPaymentId: 1,
+        mpMerchantOrderId: 1,
+        mpPreferenceId: "1",
+        mpPaymentType: "1",
+        formaPago: "MERCADO_PAGO",
+      },
+      idCliente: 1,
+      idEmpleado: 1,
+      detallePedidos: detallesPedido,
+    };
+
+    return pedido;
   };
 
   const handleCreate = async (products: IArticuloCart[]) => {
@@ -228,7 +277,12 @@ export function Cart() {
             className="cart-button cart-button-solid">
             Crear pedido
           </button>
-          {/* <CheckoutMP montoCarrito={cart.reduce((total, product) => total + product.precioVenta, 0)} /> */}
+            <CheckoutMp 
+            montoCarrito={cart.reduce((total, product) => total + product.precioVenta, 0)} 
+            pedido={handleFormatPedido(cart)}
+            setAlert={setAlert}
+            cleanCart={cleanCart}
+            />
         </>
       ) : (
         <>
