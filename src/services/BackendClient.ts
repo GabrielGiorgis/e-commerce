@@ -14,7 +14,6 @@ export abstract class BackendClient<TG, TP, TE> extends AbstractBackendClient<
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "no-cors",
       },
     });
     const data = await response.json();
@@ -47,7 +46,6 @@ export abstract class BackendClient<TG, TP, TE> extends AbstractBackendClient<
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "no-cors",
       },
       body: JSON.stringify(data),
     });

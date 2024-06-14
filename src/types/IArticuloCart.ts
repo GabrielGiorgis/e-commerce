@@ -4,4 +4,5 @@ import { IArticulo } from "./IArticulo";
 //utilizado para las peticiones, creamos el IArticuloCarrito
 export interface IArticuloCart extends IArticulo {
     amount: number;
+    suma?: number
 }

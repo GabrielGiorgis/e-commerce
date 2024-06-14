@@ -6,5 +6,5 @@ export interface IDomicilio {
     cp: number
     piso: number
     nroDpto: number
-    localidad: ILocalidad
+    idLocalidad: number
 }

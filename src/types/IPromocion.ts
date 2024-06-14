@@ -1,9 +1,11 @@
-import { IBaseEntity } from "../IBaseEntity";
-import { ISucursal } from "../Sucursal/ISucursal";
-import { IPromocionDetalle } from "../PromocionDetalle/IPromocionDetalle";
-import { IImagen } from "../Imagen/IImagen"
+import { IImagenPromocion } from "./IImagenPromocion"
+import { IPromocionDetalle } from "./IPromocionDetalle"
+import { ISucursalShort } from "./ISucursalShort"
 
-export interface IPromocion extends IBaseEntity {
+
+export interface IPromocion{
+    id: number
+    eliminado: boolean
     denominacion: string
     fechaDesde: string
     fechaHasta: string
@@ -13,6 +15,6 @@ export interface IPromocion extends IBaseEntity {
     precioPromocional: number
     tipoPromocion: string
     promocionDetalles: IPromocionDetalle[]
-    imagenes: IImagen[]
-    sucursales: ISucursal[]
+    imagenes: IImagenPromocion[]
+    sucursales: ISucursalShort[]
 }

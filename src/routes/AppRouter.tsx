@@ -6,21 +6,25 @@ import { Footer } from "../components/ui/Bars/Footer/Footer";
 import { Cart } from "../components/screens/Cart/Cart";
 import { CartContextProvider } from "../components/context/CartContext";
 import "./AppRouter.css";
+import { LoginClient } from "../components/screens/UserCLient/LoginClient";
+import { RutaPrivada } from "../components/screens/UserCLient/RutaPrivada";
 
 export const AppRouter = () => {
   return (
     <>
       <CartContextProvider>
         <div id="root">
+          
           <Header />
           <div className="main-content">
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<LoginClient />} />
+              <Route path="/" element={<RutaPrivada><Home /></RutaPrivada>} />
               <Route
                 path="/categoria/:id/articulos"
-                element={<ProductsList />}
+                element={<RutaPrivada><ProductsList /></RutaPrivada>}
               />
-              <Route path="/carrito" element={<Cart />} />
+              <Route path="/carrito" element={<RutaPrivada><Cart /></RutaPrivada>} />
             </Routes>
           </div>
           <Footer />

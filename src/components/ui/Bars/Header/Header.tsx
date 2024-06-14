@@ -48,6 +48,11 @@ export default function Header() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("idUser");
+    navigate("/login");
+  };
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -67,7 +72,7 @@ export default function Header() {
     >
       <MenuItem onClick={handleMenuClose}>Mi cuenta</MenuItem> {/* TODO: Pantalla profile de ejemplo auth0 */}
       <MenuItem onClick={handleMenuClose}>Pedidos</MenuItem> {/* TODO: Crear pantalla de pedidos del cliente */}
-      <MenuItem onClick={handleMenuClose}>Cerrar sesión</MenuItem>
+      <MenuItem onClick={handleLogout }>Cerrar sesión</MenuItem>
     </Menu>
   );
 
@@ -121,7 +126,7 @@ export default function Header() {
         </IconButton>
         <p style={{ margin: "0" }}>Pedidos</p> {/* TODO: Crear pantalla de pedidos del cliente */}
       </MenuItem>
-      <MenuItem>
+      <MenuItem onClick={handleLogout}>
         <IconButton
           size="large"
           aria-label="account of current user"

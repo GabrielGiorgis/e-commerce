@@ -12,8 +12,6 @@ export function CheckoutMp({ montoCarrito, pedido }: CheckoutMpProps) {
     const [idPreference, setIdPreference] = useState<string>("");
 
     const getPreferenceMP = async () => {
-        console.log("Pedido en el mp");
-        console.log(pedido)
         if (montoCarrito > 0) {
             const response: PreferenceMP = await createPreferenceMP(pedido);
             if (response)

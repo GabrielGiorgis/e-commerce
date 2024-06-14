@@ -7,7 +7,7 @@ import { IArticulo } from "../../../types/IArticulo";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const AllProducts = () => {
+export const AllProducts = () => {
   const [articulos, setArticulos] = useState<IArticulo[]>([]);
   const [categorias, setCategorias] = useState<ICategoria[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,16 +17,28 @@ const AllProducts = () => {
 
   const fetchArticulos = async () => {
     setIsLoading(true);
-    const response = await fetch(`${API_URL}/articulo`);
-    const data = await response.json();
-    setArticulos(data);
+    try {
+      const response = await fetch(`${API_URL}/articulo/ventas`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setArticulos(data);
+    } catch (error) {
+      console.error("Error fetching articulos:", error);
+    }
     setIsLoading(false);
   };
 
   const fetchCategorias = async () => {
-    const response = await fetch(`${API_URL}/categoria`);
-    const data = await response.json();
-    setCategorias(data);
+    try {
+      const response = await fetch(`${API_URL}/categoria/ventas`);
+      const data = await response.json();
+      setCategorias(data);
+    } catch (error) {
+      console.error("Error fetching categorias:", error);
+    }
   };
 
   useEffect(() => {
@@ -34,15 +46,15 @@ const AllProducts = () => {
     fetchCategorias();
   }, []);
 
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
-  const handleSortChange = (e) => {
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortOrder(e.target.value);
   };
 
-  const handleCategoryChange = (e) => {
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategory(e.target.value);
   };
 
@@ -50,7 +62,7 @@ const AllProducts = () => {
     .filter(
       (articulo) =>
         (selectedCategory
-          ? articulo.categoria.denominacion === selectedCategory
+          ? articulo.categoria.id === parseInt(selectedCategory)
           : true) &&
         articulo.denominacion.toLowerCase().includes(searchTerm.toLowerCase())
     )
@@ -79,21 +91,37 @@ const AllProducts = () => {
               onChange={handleSearchChange}
               className="search-input"
             />
-            <div className="category-dropdown">
-              <select value={selectedCategory} onChange={handleCategoryChange}>
+            <div className="category-dropdown" style={{ marginRight: "1rem" }}>
+              <select
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+                style={{ borderRadius: "0.5rem", padding: "0.5rem" }}
+              >
                 <option value="">Todas las categorías</option>
                 {categorias.map((categoria) => (
-                  <option key={categoria.id} value={categoria.id}>
+                  <option
+                    key={categoria.id}
+                    value={categoria.id.toString()}
+                    style={{ backgroundColor: "white", color: "black" }}
+                  >
                     {categoria.denominacion}
                   </option>
                 ))}
               </select>
             </div>
-            <div className="sort-dropdown">
-              <select value={sortOrder} onChange={handleSortChange}>
+            <div className="sort-dropdown" style={{ marginRight: "1rem" }}>
+              <select
+                value={sortOrder}
+                onChange={handleSortChange}
+                style={{ borderRadius: "0.5rem", padding: "0.5rem" }}
+              >
                 <option value="">Ordenar</option>
-                <option value="asc">Menor precio</option>
-                <option value="desc">Mayor precio</option>
+                <option value="asc" style={{ backgroundColor: "white", color: "black" }}>
+                  Menor precio
+                </option>
+                <option value="desc" style={{ backgroundColor: "white", color: "black" }}>
+                  Mayor precio
+                </option>
               </select>
             </div>
           </div>
@@ -107,5 +135,3 @@ const AllProducts = () => {
     </>
   );
 };
-
-export default AllProducts;
