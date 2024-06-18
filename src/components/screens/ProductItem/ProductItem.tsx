@@ -10,6 +10,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Box, IconButton } from "@mui/material";
 import { useCart } from "../../../hooks/useCart";
 import { IArticuloCart } from "../../../types/IArticuloCart";
+import { ICartItem } from "../../../types/Cart/ICartItem";
 
 interface IProductItem {
   product: IArticulo;
@@ -20,9 +21,9 @@ export const ProductItem = ({ product }: IProductItem) => {
   const [disabled, setDisabled] = React.useState(false);
 
   const { cart, addToCart, decreaseAmount, removeItemFromCart } = useCart();
-  const [item, setItem] = useState<IArticuloCart>(
-    cart.find((item: IArticuloCart) => item.id === product.id) || {
-      ...product,
+  const [item, setItem] = useState<ICartItem>(
+    cart.find((item: ICartItem) => item.product.id === product.id) || {
+      product: product,
       amount: 0,
     }
   );
@@ -69,10 +70,10 @@ export const ProductItem = ({ product }: IProductItem) => {
           <IconButton onClick={() => setOpenModal(true)}>
             <DescriptionIcon className="card-button" />
           </IconButton>
-          {cart.find((item: IArticuloCart) => item.id === product.id) ? (
+          {cart.find((item: ICartItem) => item.product.id === product.id) ? (
             <Box display="flex" gap="0" alignItems="center">
               <IconButton
-                key={item.id}
+                key={item.product.id}
                 onClick={() => decreaseAmount(item)}
                 color="error"
               >
@@ -97,8 +98,8 @@ export const ProductItem = ({ product }: IProductItem) => {
               onClick={() => {
                 setLoading(true);
                 setTimeout(() => {
-                  addToCart({ ...product, amount: 1 });
-                  setItem({ ...product, amount: 1 });
+                  addToCart({ product: product, amount: 1 });
+                  setItem({ product: product, amount: 1 });
                   setLoading(false);
                 }, 1500);
               }}

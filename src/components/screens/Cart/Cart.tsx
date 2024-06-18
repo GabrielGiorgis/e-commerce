@@ -9,7 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useCart } from "../../../hooks/useCart";
-import { IArticuloCart } from "../../../types/IArticuloCart";
 import CloseIcon from "@mui/icons-material/Close";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
@@ -22,9 +21,20 @@ import { IDetallePedidoPost } from "../../../types/DetallePedido/IDetallePedidoP
 import { PedidoService } from "../../../services/PedidoService";
 import { useNavigate } from "react-router-dom";
 import { CheckoutMp } from "./CheckoutMp";
+import { ICartItem } from "../../../types/Cart/ICartItem";
+import { IArticulo } from "../../../types/IArticulo";
+import { IPromocion } from "../../../types/IPromocion";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const pedidoService = new PedidoService(API_URL + "/pedido");
+
+const verifyArticulo = (item : ICartItem) => {
+  if ((item.product as IArticulo).precioVenta !== undefined ){
+    return true
+  }else{
+    return false
+  }
+}
 
 function CartItem({
   item,
@@ -32,31 +42,34 @@ function CartItem({
   addToCart,
   removeItemFromCart,
 }: {
-  item: IArticuloCart;
-  decreaseAmount: (item: IArticuloCart) => void;
-  addToCart: (item: IArticuloCart) => void;
-  removeItemFromCart: (item: IArticuloCart) => void;
+  item: ICartItem;
+  decreaseAmount: (item: ICartItem) => void;
+  addToCart: (item: ICartItem) => void;
+  removeItemFromCart: (item: ICartItem) => void;
 }) {
+
   useEffect(() => {
     if (item.amount == 0) {
       decreaseAmount(item);
     }
   }, [item.amount]);
   return (
-    <div className="cart-item" key={item.id}>
+    <div className="cart-item" key={item.product.id}>
       {}
       <IconButton color="default" onClick={() => removeItemFromCart(item)}>
         <CloseIcon />
       </IconButton>
       <div className="cart-item-image">
-        <img src={item.imagenes[0].url} alt={item.imagenes[0].name} />
+        <img src={item.product.imagenes[0].url} alt={item.product.imagenes[0].name} />
       </div>
       <div className="cart-item-details">
         <div>
           <p className="cart-item-name">
-            <strong>{item.denominacion}</strong>
+            <strong>{item.product.denominacion}</strong>
           </p>
-          <p className="cart-item-price">${item.precioVenta}</p>
+          {verifyArticulo(item) ? <p className="cart-item-price">${(item.product as IArticulo).precioVenta}</p> 
+          :
+          <p className="cart-item-price">${(item.product as IPromocion).precioPromocional}</p>}
         </div>
         <Box display="flex" gap="0" alignItems="center">
           <IconButton onClick={() => decreaseAmount(item)} color="error">
@@ -81,19 +94,32 @@ export function Cart() {
     setEnvio(event.target.checked ? "TAKE_AWAY" : "DELIVERY");
   };
 
-  const handleFormatPedido = ( products: IArticuloCart[]) => {
+  const handleFormatPedido = ( products: ICartItem[]) => {
     const total = products.reduce(
-      (total: number, product: IArticuloCart) => total + product.precioVenta,
+      (total: number, product: ICartItem) => total + (verifyArticulo(product) ? 
+        (product.product as IArticulo).precioVenta
+        :
+        (product.product as IPromocion).precioPromocional),
       0
     );
 
     const detallesPedido: IDetallePedidoPost[] = cart.map((product) => ({
       cantidad: product.amount,
-      subTotal: product.precioVenta * product.amount,
-      idArticulo: product.id,
+      subTotal: verifyArticulo(product) ? 
+        (product.product as IArticulo).precioVenta * product.amount
+        :
+        (product.product as IPromocion).precioPromocional * product.amount,
+      idArticulo: product.product.id,
     }));
 
-    const costo  = cart.map((products) => products.precioCompra * products.amount).reduce((total, item) => total + item, 0);
+    const costo  = cart.map((products) => {
+      if (verifyArticulo(products)) {
+        return (products.product as IArticulo).precioCompra * products.amount;
+      } else {
+        return (products.product as IPromocion).promocionDetalles.reduce((total, detalle) => 
+          total + detalle.articulo.precioCompra * products.amount, 0);
+      }
+    }).reduce((total, item) => total + item, 0);
     //FORMATEO DE HORA ACTUAL
     const now = new Date();
     const future = new Date(now.getTime() + 30 * 60 * 1000);
@@ -129,19 +155,33 @@ export function Cart() {
     return pedido;
   };
 
-  const handleCreate = async (products: IArticuloCart[]) => {
+  const handleCreate = async (products: ICartItem[]) => {
     const total = products.reduce(
-      (total: number, product: IArticuloCart) => total + product.precioVenta,
+      (total: number, product: ICartItem) => total + (verifyArticulo(product) ? 
+        (product.product as IArticulo).precioVenta
+        :
+        (product.product as IPromocion).precioPromocional),
       0
     );
 
     const detallesPedido: IDetallePedidoPost[] = cart.map((product) => ({
       cantidad: product.amount,
-      subTotal: product.precioVenta * product.amount,
-      idArticulo: product.id,
+      subTotal: verifyArticulo(product) ? 
+        (product.product as IArticulo).precioVenta * product.amount
+        :
+        (product.product as IPromocion).precioPromocional * product.amount,
+      idArticulo: verifyArticulo(product) ? (product.product as IArticulo).id : 0,
+      idPromocion: verifyArticulo(product) ? 0 : (product.product as IPromocion).id,
     }));
 
-    const costo  = cart.map((products) => products.precioCompra * products.amount).reduce((total, item) => total + item, 0);
+    const costo  = cart.map((products) => {
+      if (verifyArticulo(products)) {
+        return (products.product as IArticulo).precioCompra * products.amount;
+      } else {
+        return (products.product as IPromocion).promocionDetalles.reduce((total, detalle) => 
+          total + detalle.articulo.precioCompra * products.amount, 0);
+      }
+    }).reduce((total, item) => total + item, 0);
     //FORMATEO DE HORA ACTUAL
     const now = new Date();
     const future = new Date(now.getTime() + 30 * 60 * 1000);
@@ -227,7 +267,7 @@ export function Cart() {
           </div>
           <ul className="cart-item-list">
             {cart.map(
-              (item: IArticuloCart, index: number) =>
+              (item: ICartItem, index: number) =>
                 item.amount > 0 && (
                   <CartItem
                     key={index}
@@ -278,10 +318,10 @@ export function Cart() {
             Crear pedido
           </button>
             <CheckoutMp 
-            montoCarrito={cart.reduce((total, product) => total + product.precioVenta, 0)} 
+            montoCarrito={cart.reduce((total, product) => total + (verifyArticulo(product) ? (product.product as IArticulo).precioVenta : 0), 0)} 
             pedido={handleFormatPedido(cart)}
-            setAlert={setAlert}
-            cleanCart={cleanCart}
+            //setAlert={setAlert}
+            //cleanCart={cleanCart}
             />
         </>
       ) : (
