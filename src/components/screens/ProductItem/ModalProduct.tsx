@@ -51,6 +51,7 @@ export const ModalProduct = ({
               <Typography variant="body2" color="text.secondary">
                 ${product.precioVenta.toFixed(2)}
               </Typography>
+              <p className="modal-description" style={{ whiteSpace: "pre-wrap" }}>{product.descripcion}</p>
             </div>
             <div className="modal-footer">
               <IconButton>
