@@ -8,6 +8,7 @@ import { CartContextProvider } from "../components/context/CartContext";
 import "./AppRouter.css";
 import { LoginClient } from "../components/screens/UserCLient/LoginClient";
 import { RutaPrivada } from "../components/screens/UserCLient/RutaPrivada";
+import Sucursales from "../components/screens/Sucursales/Sucursales";
 
 export const AppRouter = () => {
   return (
@@ -18,6 +19,7 @@ export const AppRouter = () => {
           <Header />
           <div className="main-content">
             <Routes>
+              <Route path="/sucursales" element={<Sucursales />} />
               <Route path="/login" element={<LoginClient />} />
               <Route path="/" element={<RutaPrivada><Home /></RutaPrivada>} />
               <Route
