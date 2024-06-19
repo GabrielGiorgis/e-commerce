@@ -3,6 +3,7 @@ import { createPreferenceMP } from "../../../services/MpService";
 import { IPedidoPost } from "../../../types/Pedido/IPedidoPost";
 import PreferenceMP from "../../../types/IPreferenceMP";
 import { Wallet, initMercadoPago } from "@mercadopago/sdk-react";
+import "./StyleSheets/StyleCheckoutMp.css";
 
 interface CheckoutMpProps {
     montoCarrito: number
@@ -25,7 +26,7 @@ export function CheckoutMp({ montoCarrito, pedido }: CheckoutMpProps) {
     return (
         <div>
             <button
-                className="btn btn-primary"
+                className="btn mercado-pago-button"
                 onClick={getPreferenceMP}
             >Pagar con Mercado Pago
             </button>

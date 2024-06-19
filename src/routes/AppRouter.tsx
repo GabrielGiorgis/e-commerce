@@ -19,6 +19,7 @@ export const AppRouter = () => {
           <Header />
           <div className="main-content">
             <Routes>
+              <Route path="/sucursales" element={<Sucursales />} />
               <Route path="/login" element={<LoginClient />} />
               <Route path="/" element={<RutaPrivada><Home /></RutaPrivada>} />
               <Route
@@ -26,7 +27,6 @@ export const AppRouter = () => {
                 element={<RutaPrivada><ProductsList /></RutaPrivada>}
               />
               <Route path="/carrito" element={<RutaPrivada><Cart /></RutaPrivada>} />
-              <Route path="/sucursales" element={<Sucursales />} />
             </Routes>
           </div>
           <Footer />
