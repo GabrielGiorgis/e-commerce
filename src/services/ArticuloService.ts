@@ -1,4 +1,4 @@
-import { IArticulo } from "../types/Articulo/IArticulo";
+import { IArticulo } from "../types/IArticulo";
 import { IArticuloPost } from "../types/Articulo/IArticuloPost";
 import { BackendClient } from "./BackendClient";
 
