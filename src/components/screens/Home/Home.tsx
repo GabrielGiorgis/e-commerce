@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Loader } from "../../ui/Loader/Loader";
-import Categories from "../Categories/Categories";
 import { Sales } from "../Sales/Sales";
 import { AllProducts } from "../AllProducts/AllProducts";
 import { RegisterClient } from "../UserCLient/RegisterClient";

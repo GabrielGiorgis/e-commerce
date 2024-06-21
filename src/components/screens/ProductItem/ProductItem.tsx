@@ -11,6 +11,7 @@ import { Box, IconButton } from "@mui/material";
 import { useCart } from "../../../hooks/useCart";
 import { IArticuloCart } from "../../../types/IArticuloCart";
 import { ICartItem } from "../../../types/Cart/ICartItem";
+import { useNavigate } from "react-router-dom";
 
 interface IProductItem {
   product: IArticulo;
@@ -28,6 +29,8 @@ export const ProductItem = ({ product }: IProductItem) => {
     }
   );
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (item.amount == 0) {
       removeItemFromCart(item);
@@ -35,29 +38,24 @@ export const ProductItem = ({ product }: IProductItem) => {
   }, [item.amount]);
 
   useEffect(() => {
+    console.log("cart", cart);
     verifyEliminado();
   }, []);
 
   const verifyEliminado = () => {
-    if (product.eliminado){
-      setDisabled(true)
+    if (product.eliminado) {
+      setDisabled(true);
     }
-    product.articuloManufacturadoDetalles?.forEach(detalle => {
-      if (detalle.articuloInsumo.eliminado){
-        setDisabled(true)
+    product.articuloManufacturadoDetalles?.forEach((detalle) => {
+      if (detalle.articuloInsumo.eliminado) {
+        setDisabled(true);
       }
     });
-  }
+  };
 
   return (
     <>
-      <div
-        className={
-          disabled
-            ? "card card-disabled"
-            : "card"
-        }
-      >
+      <div className={disabled ? "card card-disabled" : "card"}>
         <div className="card-img">
           <img src={product.imagenes[0].url} alt={product.imagenes[0].name} />
         </div>
@@ -70,13 +68,16 @@ export const ProductItem = ({ product }: IProductItem) => {
           <IconButton onClick={() => setOpenModal(true)}>
             <DescriptionIcon className="card-button" />
           </IconButton>
-          {cart.find((item: ICartItem) => item.product.id === product.id) ? (
+          {cart.find(
+            (item: ICartItem) =>
+              item.product.denominacion === product.denominacion &&
+              item.product.id === product.id
+          ) ? (
             <Box display="flex" gap="0" alignItems="center">
               <IconButton
                 key={item.product.id}
                 onClick={() => decreaseAmount(item)}
-                color="error"
-              >
+                color="error">
                 <RemoveIcon />
               </IconButton>
               <input
@@ -84,6 +85,7 @@ export const ProductItem = ({ product }: IProductItem) => {
                 min="0"
                 type="number"
                 value={item.amount}
+                readOnly
               />
               <IconButton onClick={() => addToCart(item)} color="error">
                 <AddIcon />
@@ -96,14 +98,16 @@ export const ProductItem = ({ product }: IProductItem) => {
               variant="outlined"
               color="error"
               onClick={() => {
+                if (!localStorage.getItem("idUser")) {
+                  return navigate("/login");
+                }
                 setLoading(true);
                 setTimeout(() => {
                   addToCart({ product: product, amount: 1 });
                   setItem({ product: product, amount: 1 });
                   setLoading(false);
                 }, 1500);
-              }}
-            >
+              }}>
               <ShoppingCartIcon className="card-button" />
             </LoadingButton>
           )}

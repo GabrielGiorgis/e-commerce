@@ -3,4 +3,5 @@ export interface IUsuarioCliente{
     eliminado?: boolean
     userName: string
     password: string
+    email: string
 }

@@ -16,9 +16,12 @@ import { ICartItem } from "../../../types/Cart/ICartItem";
 import { IArticulo } from "../../../types/IArticulo";
 import { IPromocion } from "../../../types/IPromocion";
 import { AlertSnackbar } from "../../ui/AlertSnackbar/AlertSnackbar";
+import { SucursalService } from "../../../services/SucursalService";
+import { ISucursalShort } from "../../../types/ISucursalShort";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const pedidoService = new PedidoService(API_URL + "/pedido");
+const sucursalService = new SucursalService(API_URL + "/sucursal");
 
 const verifyArticulo = (item: ICartItem) => {
   if ((item.product as IArticulo).precioVenta !== undefined) {
@@ -44,6 +47,7 @@ function CartItem({
       decreaseAmount(item);
     }
   }, [item.amount]);
+
   return (
     <div className="cart-item" key={item.product.id}>
       {}
@@ -75,7 +79,13 @@ function CartItem({
           <IconButton onClick={() => decreaseAmount(item)} color="error">
             <RemoveIcon />
           </IconButton>
-          <input className="amount" min="0" type="number" value={item.amount} />
+          <input
+            className="amount"
+            min="0"
+            type="number"
+            value={item.amount}
+            readOnly
+          />
           <IconButton onClick={() => addToCart(item)} color="error">
             <AddIcon />
           </IconButton>
@@ -88,10 +98,56 @@ function CartItem({
 export function Cart() {
   const { cart, addToCart, decreaseAmount, removeItemFromCart, cleanCart } =
     useCart();
+  const [selectedSucursal, setSelectedSucursal] = useState<ISucursalShort>();
+  const [isSucursalOpen, setIsSucursalOpen] = useState<boolean>(false);
+
+  const [envio, setEnvio] = useState<string>("DELIVERY");
+  const [Pago, setPago] = useState<string>("EFECTIVO");
+  const [alert, setAlert] = useState({ message: "", severity: "" });
+
   const navigate = useNavigate();
+  const idUser = localStorage.getItem("idUser");
+
+  const total = cart.reduce(
+    (total, product) =>
+      total +
+      (verifyArticulo(product)
+        ? (product.product as IArticulo).precioVenta
+        : (product.product as IPromocion).precioPromocional) *
+        product.amount,
+    0
+  );
+
+  const descuento = envio === "TAKE_AWAY" ? total * 0.1 : 0;
+  const totalConDescuento = total - descuento;
+
+  const checkSucursalOpen = () => {
+    if (selectedSucursal) {
+      const [horaApertura, minutoApertura, segundoApertura] =
+        selectedSucursal.horarioApertura.split(":");
+      const [horaCierre, minutoCierre, segundoCierre] =
+        selectedSucursal.horarioCierre.split(":");
+      const now = new Date();
+      const apertura = new Date(now);
+      apertura.setHours(
+        Number(horaApertura),
+        Number(minutoApertura),
+        Number(segundoApertura)
+      );
+      const cierre = new Date(now);
+      cierre.setHours(
+        Number(horaCierre),
+        Number(minutoCierre),
+        Number(segundoCierre)
+      );
+
+      const isItOpen = apertura <= new Date() && cierre >= new Date();
+      setIsSucursalOpen(isItOpen);
+    }
+  };
 
   const handleFormatPedido = (products: ICartItem[]) => {
-    const total = products.reduce(
+    let total = products.reduce(
       (total: number, product: ICartItem) =>
         total +
         (verifyArticulo(product)
@@ -100,12 +156,21 @@ export function Cart() {
       0
     );
 
+    if (envio === "TAKE_AWAY") {
+      total = total - total * 0.1;
+    }
+
     const detallesPedido: IDetallePedidoPost[] = cart.map((product) => ({
       cantidad: product.amount,
       subTotal: verifyArticulo(product)
         ? (product.product as IArticulo).precioVenta * product.amount
         : (product.product as IPromocion).precioPromocional * product.amount,
-      idArticulo: product.product.id,
+      idArticulo: verifyArticulo(product)
+        ? (product.product as IArticulo).id
+        : 0,
+      idPromocion: verifyArticulo(product)
+        ? 0
+        : (product.product as IPromocion).id,
     }));
 
     const costo = cart
@@ -131,7 +196,7 @@ export function Cart() {
 
     const pedido: IPedidoPost = {
       horaEstimadaFinalizacion: formattedTime, //HORA FORMATEADA
-      total: detallesPedido.reduce((total, item) => total + item.subTotal, 0),
+      total: envio == "TAKE_AWAY" ? totalConDescuento : total,
       totalCosto: costo,
       estado: "PENDIENTE",
       tipoEnvio: envio,
@@ -148,15 +213,25 @@ export function Cart() {
         mpPaymentType: "1",
         formaPago: "MERCADO_PAGO",
       },
-      idCliente: 1,
+      idCliente: Number(idUser),
       idEmpleado: 1,
       detallePedidos: detallesPedido,
     };
-
     return pedido;
   };
 
   const handleCreate = async (products: ICartItem[]) => {
+    checkSucursalOpen();
+    if (!isSucursalOpen) {
+      return setAlert({
+        message:
+          "En este momento nuestra sucursal se encuentra cerrada. Por favor, vuelva pronto.",
+        severity: "error",
+      });
+    }
+    if (localStorage.getItem("idUser")) {
+      return navigate("/login");
+    }
     const total = products.reduce(
       (total: number, product: ICartItem) =>
         total +
@@ -202,7 +277,7 @@ export function Cart() {
 
     const pedido: IPedidoPost = {
       horaEstimadaFinalizacion: formattedTime, //HORA FORMATEADA
-      total: detallesPedido.reduce((total, item) => total + item.subTotal, 0),
+      total: envio == "TAKE_AWAY" ? totalConDescuento : total,
       totalCosto: costo,
       estado: "PENDIENTE",
       tipoEnvio: envio,
@@ -219,7 +294,7 @@ export function Cart() {
         mpPaymentType: "1",
         formaPago: "MERCADO_PAGO",
       },
-      idCliente: 1,
+      idCliente: Number(idUser),
       idEmpleado: 1,
       detallePedidos: detallesPedido,
     };
@@ -251,10 +326,16 @@ export function Cart() {
     }
   };
 
-  const [envio, setEnvio] = useState<string>("DELIVERY");
-  const [Pago, setPago] = useState<string>("EFECTIVO");
-  const [alert, setAlert] = useState({ message: "", severity: "" });
-
+  useEffect(() => {
+    const getSelectedSucursal = async () => {
+      const idSucursal = localStorage.getItem("idSucursalEcommerce");
+      if (idSucursal) {
+        const sucursal = await sucursalService.getById(Number(idSucursal));
+        if (sucursal) setSelectedSucursal(sucursal);
+      }
+    };
+    getSelectedSucursal();
+  }, []);
   return (
     <div className="cart-container">
       <AlertSnackbar message={alert.message} severity={alert.severity} />
@@ -280,14 +361,26 @@ export function Cart() {
                 )
             )}
           </ul>
+          <div className="cart-total">
+            {envio === "TAKE_AWAY" ? (
+              <p style={{ textAlign: "end" }}>
+                Total: <s>${total.toFixed(2)}</s>{" "}
+                <span style={{ color: "#d32f2f" }}>
+                  {totalConDescuento.toFixed(2)}
+                </span>{" "}
+                <span style={{ color: "#2e7d32" }}>10% OFF</span>
+              </p>
+            ) : (
+              <p style={{ textAlign: "end" }}>Total: ${total.toFixed(2)}</p>
+            )}
+          </div>
           <div className="cart-footer">
             <div>
               <label htmlFor="tipoEnvio">Tipo de envío:</label>
               <select
                 id="tipoEnvio"
                 value={envio}
-                onChange={(e) => setEnvio(e.target.value)}
-              >
+                onChange={(e) => setEnvio(e.target.value)}>
                 <option value="DELIVERY">Delivery</option>
                 <option value="TAKE_AWAY">Take away</option>
               </select>
@@ -298,8 +391,7 @@ export function Cart() {
                 id="formaPago"
                 name="formaPago"
                 value={Pago}
-                onChange={(e) => setPago(e.target.value)}
-              >
+                onChange={(e) => setPago(e.target.value)}>
                 {envio === "DELIVERY" ? (
                   <option value="MERCADO_PAGO">Mercado pago</option>
                 ) : (
@@ -323,7 +415,7 @@ export function Cart() {
                       total +
                       (verifyArticulo(product)
                         ? (product.product as IArticulo).precioVenta
-                        : 0),
+                        : (product.product as IPromocion).precioPromocional),
                     0
                   )}
                   pedido={handleFormatPedido(cart)}

@@ -1,9 +1,11 @@
-import { IDomicilio } from "./IDomicilio"
+import { IDomicilio } from "./Domicilio/IDomicilio";
 
 export interface ISucursalShort {
-    nombre: string
-    horarioApertura: string
-    horarioCierre: string
-    esCasaMatriz: boolean
-    domicilio: IDomicilio
+  id: number;
+  eliminado: boolean;
+  nombre: string;
+  horarioApertura: string;
+  horarioCierre: string;
+  esCasaMatriz: boolean;
+  domicilio: IDomicilio;
 }

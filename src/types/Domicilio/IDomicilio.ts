@@ -1,11 +1,12 @@
-import { IBaseEntity } from "../IBaseEntity"
-import { ILocalidad } from "../Localidad/ILocalidad"
+import { ILocalidad } from "../ILocalidad";
 
-export interface IDomicilio extends IBaseEntity{
-    calle: string
-    numero: number
-    cp: number
-    piso: number
-    nroDpto: number
-    localidad: ILocalidad
+export interface IDomicilio {
+  id: number;
+  eliminado: boolean;
+  calle: string;
+  numero: number;
+  cp: number;
+  piso: number;
+  nroDpto: number;
+  localidad: ILocalidad;
 }

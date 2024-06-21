@@ -45,6 +45,11 @@ export default function Header() {
     handleMobileMenuClose();
   };
 
+  const handleRedirect = (route: string) => {
+    navigate(`/${route}`);
+    handleMenuClose();
+  };
+
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
@@ -73,10 +78,10 @@ export default function Header() {
       onClose={handleMenuClose}>
       {idUser ? (
         <div>
-          <MenuItem key="account" onClick={handleMenuClose}>
+          <MenuItem key="account" onClick={() => handleRedirect("profile")}>
             {"Mi cuenta"}
           </MenuItem>
-          <MenuItem key="orders" onClick={handleMenuClose}>
+          <MenuItem key="orders" onClick={() => handleRedirect("pedidos")}>
             {"Pedidos"}
           </MenuItem>{" "}
           {/* TODO: Crear pantalla de pedidos del cliente */}
@@ -92,7 +97,7 @@ export default function Header() {
 
   React.useEffect(() => {
     const checkIdSucursal = () => {
-      if (!localStorage.getItem("idSucursal")) {
+      if (!localStorage.getItem("idSucursalEcommerce")) {
         if (
           location.pathname !== "/login" &&
           location.pathname !== "/carrito"
@@ -133,7 +138,7 @@ export default function Header() {
         </IconButton>
         <p style={{ margin: "0" }}>Carrito</p>
       </MenuItem>
-      <MenuItem>
+      <MenuItem onClick={() => navigate("/profile")}>
         <IconButton
           size="large"
           aria-label="account of current user"
@@ -142,10 +147,9 @@ export default function Header() {
           color="inherit">
           <AccountCircle />
         </IconButton>
-        <p style={{ margin: "0" }}>Mi cuenta</p>{" "}
-        {/* TODO: Pantalla profile de ejemplo auth0 */}
+        <p style={{ margin: "0" }}>Mi cuenta</p>
       </MenuItem>
-      <MenuItem>
+      <MenuItem onClick={() => navigate("/pedidos")}>
         <IconButton
           size="large"
           aria-label="account of current user"
@@ -154,8 +158,7 @@ export default function Header() {
           color="inherit">
           <ReceiptLongIcon />
         </IconButton>
-        <p style={{ margin: "0" }}>Pedidos</p>{" "}
-        {/* TODO: Crear pantalla de pedidos del cliente */}
+        <p style={{ margin: "0" }}>Pedidos</p>
       </MenuItem>
       <MenuItem onClick={handleLogout}>
         <IconButton

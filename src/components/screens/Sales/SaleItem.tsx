@@ -19,10 +19,6 @@ export const SaleItem = ({ promocion }: SaleItemProps) => {
     }
   );
 
-  useLayoutEffect(() => {
-    console.log(promocion);
-  });
-
   useEffect(() => {
     if (item.amount === 0) {
       removeItemFromCart(item);
@@ -30,7 +26,6 @@ export const SaleItem = ({ promocion }: SaleItemProps) => {
   }, [item.amount, removeItemFromCart]);
 
   useEffect(() => {
-    console.log(promocion);
     verifyEliminado();
   }, []);
 
@@ -68,7 +63,7 @@ export const SaleItem = ({ promocion }: SaleItemProps) => {
         </span>
         {promocion.promocionDetalles.map((detalle, index) => (
           <span className="text-body" key={index}>
-            {detalle.articulo.denominacion} - {detalle.cantidad}
+            {detalle.articulo?.denominacion} - {detalle.cantidad}
           </span>
         ))}
       </div>
