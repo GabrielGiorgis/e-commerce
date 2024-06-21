@@ -54,7 +54,7 @@ export const SaleItem = ({ promocion }: SaleItemProps) => {
                 <span className="text-title">${promocion.precioPromocional.toFixed(2)}</span>
                 <span className="text-body">Válida hasta el {promocion.fechaHasta}</span>
                 {promocion.promocionDetalles.map((detalle, index) => (
-                    <span className="text-body" key={index}>{detalle.articulo.denominacion} - {detalle.cantidad}</span>
+                    <span className="text-body" key={index}>{detalle.articulo?.denominacion} - {detalle.cantidad}</span>
                 ))}
             </div>
             <LoadingButton

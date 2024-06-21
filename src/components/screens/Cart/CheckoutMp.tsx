@@ -8,6 +8,7 @@ import "./StyleSheets/StyleCheckoutMp.css";
 interface CheckoutMpProps {
     montoCarrito: number
     pedido: IPedidoPost
+    
 }
 export function CheckoutMp({ montoCarrito, pedido }: CheckoutMpProps) {
     const [idPreference, setIdPreference] = useState<string>("");

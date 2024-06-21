@@ -100,12 +100,16 @@ export function Cart() {
       0
     );
 
-    const detallesPedido: IDetallePedidoPost[] = cart.map((product) => ({
-      cantidad: product.amount,
+    const detallesPedido: IDetallePedidoPost[] = cart.map((product) => ({      cantidad: product.amount,
       subTotal: verifyArticulo(product)
         ? (product.product as IArticulo).precioVenta * product.amount
         : (product.product as IPromocion).precioPromocional * product.amount,
-      idArticulo: product.product.id,
+      idArticulo: verifyArticulo(product)
+        ? (product.product as IArticulo).id
+        : 0,
+      idPromocion: verifyArticulo(product)
+        ? 0
+        : (product.product as IPromocion).id,
     }));
 
     const costo = cart
@@ -323,7 +327,7 @@ export function Cart() {
                       total +
                       (verifyArticulo(product)
                         ? (product.product as IArticulo).precioVenta
-                        : 0),
+                        : (product.product as IPromocion).precioPromocional),
                     0
                   )}
                   pedido={handleFormatPedido(cart)}
