@@ -13,7 +13,7 @@ export const AllProducts = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchArticulos = async () => {
     setIsLoading(true);
@@ -95,15 +95,13 @@ export const AllProducts = () => {
               <select
                 value={selectedCategory}
                 onChange={handleCategoryChange}
-                style={{ borderRadius: "0.5rem", padding: "0.5rem" }}
-              >
+                style={{ borderRadius: "0.5rem", padding: "0.5rem" }}>
                 <option value="">Todas las categorías</option>
                 {categorias.map((categoria) => (
                   <option
                     key={categoria.id}
                     value={categoria.id.toString()}
-                    style={{ backgroundColor: "white", color: "black" }}
-                  >
+                    style={{ backgroundColor: "white", color: "black" }}>
                     {categoria.denominacion}
                   </option>
                 ))}
@@ -113,13 +111,16 @@ export const AllProducts = () => {
               <select
                 value={sortOrder}
                 onChange={handleSortChange}
-                style={{ borderRadius: "0.5rem", padding: "0.5rem" }}
-              >
+                style={{ borderRadius: "0.5rem", padding: "0.5rem" }}>
                 <option value="">Ordenar</option>
-                <option value="asc" style={{ backgroundColor: "white", color: "black" }}>
+                <option
+                  value="asc"
+                  style={{ backgroundColor: "white", color: "black" }}>
                   Menor precio
                 </option>
-                <option value="desc" style={{ backgroundColor: "white", color: "black" }}>
+                <option
+                  value="desc"
+                  style={{ backgroundColor: "white", color: "black" }}>
                   Mayor precio
                 </option>
               </select>

@@ -11,8 +11,8 @@ import {
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import LogoutIcon from '@mui/icons-material/Logout';
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import LogoutIcon from "@mui/icons-material/Logout";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
 import "./Header.css";
@@ -25,6 +25,7 @@ export default function Header() {
     React.useState<null | HTMLElement>(null);
 
   const navigate = useNavigate();
+  const idUser = localStorage.getItem("idUser");
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -56,6 +57,7 @@ export default function Header() {
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
+      style={{ marginTop: "40px" }}
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: "top",
@@ -68,13 +70,43 @@ export default function Header() {
         horizontal: "right",
       }}
       open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Mi cuenta</MenuItem> {/* TODO: Pantalla profile de ejemplo auth0 */}
-      <MenuItem onClick={handleMenuClose}>Pedidos</MenuItem> {/* TODO: Crear pantalla de pedidos del cliente */}
-      <MenuItem onClick={handleLogout }>Cerrar sesión</MenuItem>
+      onClose={handleMenuClose}>
+      {idUser ? (
+        <div>
+          <MenuItem key="account" onClick={handleMenuClose}>
+            {"Mi cuenta"}
+          </MenuItem>
+          <MenuItem key="orders" onClick={handleMenuClose}>
+            {"Pedidos"}
+          </MenuItem>{" "}
+          {/* TODO: Crear pantalla de pedidos del cliente */}
+          <MenuItem key="logout" onClick={handleLogout}>
+            {"Cerrar sesión"}
+          </MenuItem>
+        </div>
+      ) : (
+        <MenuItem onClick={() => navigate("/login")}>Iniciar sesión</MenuItem>
+      )}
     </Menu>
   );
+
+  React.useEffect(() => {
+    const checkIdSucursal = () => {
+      if (!localStorage.getItem("idSucursal")) {
+        if (
+          location.pathname !== "/login" &&
+          location.pathname !== "/carrito"
+        ) {
+          navigate("/sucursales");
+        }
+      }
+    };
+
+    checkIdSucursal();
+    return () => {
+      checkIdSucursal();
+    };
+  }, [location, navigate]);
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
@@ -92,8 +124,7 @@ export default function Header() {
       }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
-      onClick={handleMobileMenuClose}
-    >
+      onClick={handleMobileMenuClose}>
       <MenuItem onClick={() => navigate("/carrito")}>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={cart.length} color="error">
@@ -108,11 +139,11 @@ export default function Header() {
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
-          color="inherit"
-        >
+          color="inherit">
           <AccountCircle />
         </IconButton>
-        <p style={{ margin: "0" }}>Mi cuenta</p> {/* TODO: Pantalla profile de ejemplo auth0 */}
+        <p style={{ margin: "0" }}>Mi cuenta</p>{" "}
+        {/* TODO: Pantalla profile de ejemplo auth0 */}
       </MenuItem>
       <MenuItem>
         <IconButton
@@ -120,11 +151,11 @@ export default function Header() {
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
-          color="inherit"
-        >
+          color="inherit">
           <ReceiptLongIcon />
         </IconButton>
-        <p style={{ margin: "0" }}>Pedidos</p> {/* TODO: Crear pantalla de pedidos del cliente */}
+        <p style={{ margin: "0" }}>Pedidos</p>{" "}
+        {/* TODO: Crear pantalla de pedidos del cliente */}
       </MenuItem>
       <MenuItem onClick={handleLogout}>
         <IconButton
@@ -132,8 +163,7 @@ export default function Header() {
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
-          color="inherit"
-        >
+          color="inherit">
           <LogoutIcon />
         </IconButton>
         <p style={{ margin: "0" }}>Cerrar sesión</p>
@@ -151,8 +181,7 @@ export default function Header() {
             color="inherit"
             aria-label="open drawer"
             sx={{ mr: 2 }}
-            onClick={() => navigate("/")}
-          >
+            onClick={() => navigate("/")}>
             <img
               src={logoImg}
               alt="Logo"
@@ -164,20 +193,16 @@ export default function Header() {
             noWrap
             component="div"
             sx={{ display: { xs: "none", sm: "block" } }}
-            onClick={() => navigate("/")}
-          >
+            onClick={() => navigate("/")}>
             Buen Sabor
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          <Box
-            sx={{ display: { xs: "none", md: "flex" } }}
-          >
+          <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
-              onClick={() => navigate("/carrito")}
-            >
+              onClick={() => navigate("/carrito")}>
               <Badge badgeContent={cart.length} color="error">
                 <ShoppingCartIcon />
               </Badge>
@@ -189,8 +214,7 @@ export default function Header() {
               aria-controls={menuId}
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
+              color="inherit">
               <AccountCircle />
             </IconButton>
           </Box>
@@ -201,8 +225,7 @@ export default function Header() {
               aria-controls={mobileMenuId}
               aria-haspopup="true"
               onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
+              color="inherit">
               <MoreIcon />
             </IconButton>
           </Box>

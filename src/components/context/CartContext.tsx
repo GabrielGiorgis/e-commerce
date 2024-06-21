@@ -1,6 +1,4 @@
-import { ReactNode, createContext, useState } from "react";
-import { IArticuloCart } from "../../types/IArticuloCart";
-import { IPromocion } from "../../types/IPromocion";
+import { ReactNode, createContext, useState, useCallback } from "react";
 import { ICartItem } from "../../types/Cart/ICartItem";
 
 interface CartContextType {
@@ -22,58 +20,45 @@ export const CartContext = createContext<CartContextType>({
 export function CartContextProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<ICartItem[]>([]);
 
-  const addToCart = async (product: ICartItem) => {
-    let existe: boolean = false;
-    cart.forEach((element: ICartItem) => {
-      if (element.product.id === product.product.id) {
-        existe = true;
-        return;
+  const addToCart = useCallback((product: ICartItem) => {
+    setCart((prevCart) => {
+      const exists = prevCart.some(
+        (item) => item.product.id === product.product.id
+      );
+
+      if (exists) {
+        return prevCart.map((item) =>
+          item.product.id === product.product.id
+            ? { ...item, amount: item.amount + 1 }
+            : item
+        );
+      } else {
+        return [...prevCart, { ...product, amount: 1 }];
       }
     });
-    if (existe) {
-      console.log("El articulo ya se encuentra en el carrito.");
-      product.amount += 1;
-      const cartClonado = structuredClone(
-        cart.filter((item) => item.product.id !== product.product.id)
-      );
-      cartClonado.push(product);
-      setCart(cartClonado);
-    } else {
-      console.log("NO EXISTE");
-      product.amount = 1;
-      setCart((prevCart) => [...prevCart, product]);
-    }
-  };
+  }, []);
 
-  const removeItemFromCart = async (product: ICartItem) => {
+  const removeItemFromCart = useCallback((product: ICartItem) => {
     setCart((prevCart) =>
       prevCart.filter((item) => item.product.id !== product.product.id)
     );
-  };
+  }, []);
 
-  const decreaseAmount = async (product: ICartItem) => {
-    let existe: boolean = false;
-    cart.forEach((element: ICartItem) => {
-      if (element.product.id === product.product.id) {
-        existe = true;
-        return;
-      }
-    });
-    if (existe) {
-      if (product.amount >= 1) {
-        product.amount -= 1;
-        const cartClonado = structuredClone(
-          cart.filter((item) => item.product.id !== product.product.id)
-        );
-        cartClonado.push(product);
-        setCart(cartClonado);
-      }
-    }
-  };
+  const decreaseAmount = useCallback((product: ICartItem) => {
+    setCart((prevCart) =>
+      prevCart
+        .map((item) =>
+          item.product.id === product.product.id && item.amount > 1
+            ? { ...item, amount: item.amount - 1 }
+            : item
+        )
+        .filter((item) => item.amount > 0)
+    );
+  }, []);
 
-  const cleanCart = () => {
+  const cleanCart = useCallback(() => {
     setCart([]);
-  };
+  }, []);
 
   return (
     <CartContext.Provider

@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import './LoginClient.css'
-import { IUsuarioCliente } from '../../../types/IUsuarioCliente';
-import { UsuarioService } from '../../../services/UsuarioService';
-import { useNavigate } from 'react-router-dom';
-
+import React, { useEffect, useState } from "react";
+import "./LoginClient.css";
+import { IUsuarioCliente } from "../../../types/IUsuarioCliente";
+import { UsuarioService } from "../../../services/UsuarioService";
+import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
 export const LoginClient = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState<string>('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string>("");
 
   const [user, setUser] = useState<IUsuarioCliente>();
 
@@ -19,35 +18,31 @@ export const LoginClient = () => {
   useEffect(() => {
     setUser({
       userName: username,
-      password: password
+      password: password,
     });
   }, [username, password]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Validación basica
-    if (username.trim() === '' || password.trim() === '') {
-      setError('Por favor, complete todos los campos');
+    if (username.trim() === "" || password.trim() === "") {
+      setError("Por favor, complete todos los campos");
       return;
     }
-    
-    // Aquí puedes manejar la lógica de autenticación
-    try{
+
+    try {
       const response = await usuarioService.login(user as IUsuarioCliente);
       console.log(response);
       if (response) {
-        localStorage.setItem('idUser', response.id);
-        navigate('/');
-      }else{
-        setError('Credenciales incorrectas');
-        return navigate('/login');
+        localStorage.setItem("idUser", response.id);
+        navigate(-1);
+      } else {
+        setError("Credenciales incorrectas");
+        return navigate("/login");
       }
     } catch (error) {
       console.error("Error fetching categorias:", error);
     }
-
-    // Reset error message
-    setError('');
+    setError("");
   };
 
   return (
@@ -77,7 +72,9 @@ export const LoginClient = () => {
             placeholder="Ingrese su contraseña"
           />
         </div>
-        <button type="submit" className="login-button">Ingresar</button>
+        <button type="submit" className="login-button">
+          Ingresar
+        </button>
       </form>
     </div>
   );

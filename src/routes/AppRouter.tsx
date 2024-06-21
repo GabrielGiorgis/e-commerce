@@ -15,18 +15,24 @@ export const AppRouter = () => {
     <>
       <CartContextProvider>
         <div id="root">
-          
           <Header />
           <div className="main-content">
             <Routes>
               <Route path="/sucursales" element={<Sucursales />} />
               <Route path="/login" element={<LoginClient />} />
-              <Route path="/" element={<RutaPrivada><Home /></RutaPrivada>} />
+              <Route path="/" element={<Home />} />
               <Route
                 path="/categoria/:id/articulos"
-                element={<RutaPrivada><ProductsList /></RutaPrivada>}
+                element={<ProductsList />}
               />
-              <Route path="/carrito" element={<RutaPrivada><Cart /></RutaPrivada>} />
+              <Route
+                path="/carrito"
+                element={
+                  <RutaPrivada>
+                    <Cart />
+                  </RutaPrivada>
+                }
+              />
             </Routes>
           </div>
           <Footer />
