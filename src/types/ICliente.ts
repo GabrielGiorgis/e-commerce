@@ -9,8 +9,6 @@ export interface ICliente {
     nombre: string
     apellido: string
     telefono: string
-    email: string
-    imagenCliente: IImagenCLiente
     domicilios : IDomicilio[]
     pedidos : IPedidoPost[]
     usuario: IUsuarioCliente
