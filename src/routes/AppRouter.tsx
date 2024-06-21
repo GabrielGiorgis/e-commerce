@@ -12,8 +12,12 @@ import Sucursales from "../components/screens/Sucursales/Sucursales";
 import HistorialPedidos from "../components/screens/Client/HistorialPedidos";
 import Profile from "../components/screens/Client/Profile";
 import { RegisterClient } from "../components/screens/UserCLient/RegisterClient";
+import { useEffect, useState } from "react";
+import { ICliente } from "../types/ICliente";
+import { ClienteService } from "../services/ClienteService";
 
 export const AppRouter = () => {
+
   return (
     <>
       <CartContextProvider>

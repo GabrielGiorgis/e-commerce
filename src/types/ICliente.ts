@@ -11,5 +11,5 @@ export interface ICliente {
     telefono: string
     domicilios : IDomicilio[]
     pedidos : IPedidoPost[]
-    usuario: IUsuarioCliente
+    usuarioCliente: IUsuarioCliente
 }

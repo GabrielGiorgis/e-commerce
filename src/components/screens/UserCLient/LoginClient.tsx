@@ -3,23 +3,27 @@ import './LoginClient.css'
 import { IUsuarioCliente } from '../../../types/IUsuarioCliente';
 import { UsuarioService } from '../../../services/UsuarioService';
 import { useNavigate } from 'react-router-dom';
+import { ClienteService } from '../../../services/ClienteService';
 
 
 const API_URL = import.meta.env.VITE_API_URL;
 export const LoginClient = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
   const [error, setError] = useState<string>('');
 
   const [user, setUser] = useState<IUsuarioCliente>();
 
   const usuarioService = new UsuarioService(`${API_URL}/usuario-cliente`);
+  const clienteService = new ClienteService(`${API_URL}/cliente`);
   const navigate = useNavigate();
 
   useEffect(() => {
     setUser({
       userName: username,
-      password: password
+      password: password,
+      email: email
     });
   }, [username, password]);
 
@@ -36,8 +40,14 @@ export const LoginClient = () => {
       const response = await usuarioService.login(user as IUsuarioCliente);
       console.log(response);
       if (response) {
-        localStorage.setItem('idUser', response.id);
-        navigate('/');
+        const client = await clienteService.getByUserId(response.id);
+        console.log(client);
+        const idClient = client?.id;
+        if (idClient) {
+          localStorage.setItem('idUser', idClient.toString());
+          navigate('/');
+        }
+
       }else{
         setError('Credenciales incorrectas');
         return navigate('/login');

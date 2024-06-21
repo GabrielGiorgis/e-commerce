@@ -89,6 +89,7 @@ export function Cart() {
   const { cart, addToCart, decreaseAmount, removeItemFromCart, cleanCart } =
     useCart();
   const navigate = useNavigate();
+  const idUser = localStorage.getItem("idUser");
 
   const handleFormatPedido = (products: ICartItem[]) => {
     const total = products.reduce(
@@ -152,7 +153,7 @@ export function Cart() {
         mpPaymentType: "1",
         formaPago: "MERCADO_PAGO",
       },
-      idCliente: 1,
+      idCliente: Number(idUser),
       idEmpleado: 1,
       detallePedidos: detallesPedido,
     };
@@ -223,7 +224,7 @@ export function Cart() {
         mpPaymentType: "1",
         formaPago: "MERCADO_PAGO",
       },
-      idCliente: 1,
+      idCliente: Number(idUser),
       idEmpleado: 1,
       detallePedidos: detallesPedido,
     };

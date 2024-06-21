@@ -4,29 +4,31 @@ import { ICliente } from "../../../types/ICliente";
 import "./RegisterClient.css";
 import { Box, Button, Grid, Step, StepLabel, Stepper } from "@mui/material";
 import { Form } from "react-bootstrap";
+import { ClienteService } from "../../../services/ClienteService";
 
 const steps = ["Datos Personales", "Domicilio"];
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const RegisterClient = () => {
   const [cliente, setCliente] = useState<ICliente>({
     nombre: "",
     apellido: "",
     telefono: "",
-    email: "",
-    imagenCliente: { UUID: "", name: "", url: "" },
     domicilios: [],
     pedidos: [],
-    usuario: { userName: "", password: "" },
+    usuarioCliente: { userName: "", password: "", email: "" },
   });
 
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
 
+  const clienteService = new ClienteService(`${API_URL}/cliente`);
+
   const handleNext = () => {
     if (activeStep === steps.length - 1) {
       try {
-        handleSubmit();
+        handleSubmit(cliente); // Aquí pasamos cliente como parámetro
       } catch (err) {
         console.log(err);
       }
@@ -41,30 +43,50 @@ export const RegisterClient = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setCliente({ ...cliente, [name]: value });
+    if (name.startsWith("usuario.")) {
+      setCliente({
+        ...cliente,
+        usuarioCliente: {
+          ...cliente.usuarioCliente,
+          [name.split(".")[1]]: value,
+        },
+      });
+    } else {
+      setCliente({ ...cliente, [name]: value });
+    }
   };
 
-  const handleUsuarioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDomicilioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setCliente({ ...cliente, usuario: { ...cliente.usuario, [name]: value } });
+    const updatedDomicilios = [{
+      ...cliente.domicilios[0],
+      [name]: name === "numero" || name === "idLocalidad" || name === "nroDpto" ? parseInt(value) : value
+    }];
+    setCliente({
+      ...cliente,
+      domicilios: updatedDomicilios,
+    });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = (cliente: ICliente) => {
     // Validación básica
     if (
       cliente.nombre.trim() === "" ||
       cliente.apellido.trim() === "" ||
       cliente.telefono.trim() === "" ||
-      cliente.email.trim() === "" ||
-      cliente.usuario.userName.trim() === "" ||
-      cliente.usuario.password.trim() === ""
+      cliente.usuarioCliente.email.trim() === "" ||
+      cliente.usuarioCliente.userName.trim() === "" ||
+      cliente.usuarioCliente.password.trim() === "" ||
+      cliente.domicilios.length === 0 ||
+      cliente.domicilios[0].calle.trim() === "" ||
+      cliente.domicilios[0].numero === 0 ||
+      cliente.domicilios[0].idLocalidad === 0
     ) {
       setError("Por favor, complete todos los campos");
       return;
     }
-    // Aquí puedes manejar la lógica de registro
     console.log("Cliente:", cliente);
+    clienteService.post(cliente);
     // Reset error message
     setError("");
     navigate("/login");
@@ -87,12 +109,12 @@ export const RegisterClient = () => {
         <React.Fragment>
           <Box className="box-row">
             <Box className="box-auto-flex" />
-            <Button onClick={handleSubmit}>Registrarse</Button>
+            <Button onClick={() => handleSubmit(cliente)}>Registrarse</Button>
           </Box>
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={(e) => e.preventDefault()}>
             {error && <p className="error-message">{error}</p>}
             {activeStep === 0 && (
               <>
@@ -141,13 +163,13 @@ export const RegisterClient = () => {
                   <Grid item xs={6}>
                     {/* NOMBRE DE USUARIO */}
                     <Form.Group controlId="userName" className="mb-3">
-                      <Form.Label>Apellido</Form.Label>
+                      <Form.Label>Nombre de Usuario</Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="Ingrese su nombre de usuario"
-                        name="userName"
-                        value={cliente.usuario.userName}
-                        onChange={handleUsuarioChange}
+                        name="usuario.userName"
+                        value={cliente.usuarioCliente.userName}
+                        onChange={handleInputChange}
                       />
                     </Form.Group>
                   </Grid>
@@ -160,8 +182,8 @@ export const RegisterClient = () => {
                       <Form.Control
                         type="text"
                         placeholder="Ingrese su email"
-                        name="email"
-                        value={cliente.email}
+                        name="usuario.email"
+                        value={cliente.usuarioCliente.email}
                         onChange={handleInputChange}
                       />
                     </Form.Group>
@@ -173,9 +195,9 @@ export const RegisterClient = () => {
                       <Form.Control
                         type="password"
                         placeholder="Ingrese su contraseña"
-                        name="password"
-                        value={cliente.usuario.password}
-                        onChange={handleUsuarioChange}
+                        name="usuario.password"
+                        value={cliente.usuarioCliente.password}
+                        onChange={handleInputChange}
                       />
                     </Form.Group>
                   </Grid>
@@ -192,9 +214,9 @@ export const RegisterClient = () => {
                       <Form.Control
                         type="text"
                         placeholder="Ingrese la calle"
-                        name="email"
-                        value={cliente.domicilios[0].calle}
-                        onChange={handleInputChange}
+                        name="calle"
+                        value={cliente.domicilios.length > 0 ? cliente.domicilios[0]?.calle : ""}
+                        onChange={handleDomicilioChange}
                       />
                     </Form.Group>
                   </Grid>
@@ -203,11 +225,11 @@ export const RegisterClient = () => {
                     <Form.Group controlId="localidad" className="mb-3">
                       <Form.Label>Localidad</Form.Label>
                       <Form.Control
-                        type=""
+                        type="text"
                         placeholder="Ingrese la localidad"
-                        name=""
-                        value={cliente.domicilios[0].idLocalidad}
-                        onChange={handleInputChange}
+                        name="idLocalidad"
+                        value={cliente.domicilios.length > 0 ? cliente.domicilios[0]?.idLocalidad : ""}
+                        onChange={handleDomicilioChange}
                       />
                     </Form.Group>
                   </Grid>
@@ -221,8 +243,8 @@ export const RegisterClient = () => {
                         type="number"
                         placeholder="Ingrese el número"
                         name="numero"
-                        value={cliente.domicilios[0].numero}
-                        onChange={handleInputChange}
+                        value={cliente.domicilios.length > 0 ? cliente.domicilios[0]?.numero : ""}
+                        onChange={handleDomicilioChange}
                       />
                     </Form.Group>
                   </Grid>
@@ -231,11 +253,11 @@ export const RegisterClient = () => {
                     <Form.Group controlId="nroDpto" className="mb-3">
                       <Form.Label>Número Departamento</Form.Label>
                       <Form.Control
-                        type=""
+                        type="text"
                         placeholder="Ingrese su localidad"
-                        name=""
-                        value={cliente.domicilios[0].idLocalidad}
-                        onChange={handleInputChange}
+                        name="nroDpto"
+                        value={cliente.domicilios.length > 0 ? cliente.domicilios[0]?.nroDpto : ""}
+                        onChange={handleDomicilioChange}
                       />
                     </Form.Group>
                   </Grid>
