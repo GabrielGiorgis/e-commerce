@@ -78,6 +78,7 @@ export const LoginClient = () => {
           />
         </div>
         <button type="submit" className="login-button">Ingresar</button>
+        <p>¿No tenes una cuenta? <a href="/register">Registrate</a></p>
       </form>
     </div>
   );

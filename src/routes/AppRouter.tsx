@@ -9,6 +9,9 @@ import "./AppRouter.css";
 import { LoginClient } from "../components/screens/UserCLient/LoginClient";
 import { RutaPrivada } from "../components/screens/UserCLient/RutaPrivada";
 import Sucursales from "../components/screens/Sucursales/Sucursales";
+import HistorialPedidos from "../components/screens/Client/HistorialPedidos";
+import Profile from "../components/screens/Client/Profile";
+import { RegisterClient } from "../components/screens/UserCLient/RegisterClient";
 
 export const AppRouter = () => {
   return (
@@ -21,12 +24,11 @@ export const AppRouter = () => {
             <Routes>
               <Route path="/sucursales" element={<Sucursales />} />
               <Route path="/login" element={<LoginClient />} />
-              <Route path="/" element={<RutaPrivada><Home /></RutaPrivada>} />
-              <Route
-                path="/categoria/:id/articulos"
-                element={<RutaPrivada><ProductsList /></RutaPrivada>}
-              />
+              <Route path="/register" element={<RegisterClient />} />
+              <Route path="/" element={<Home />} />
               <Route path="/carrito" element={<RutaPrivada><Cart /></RutaPrivada>} />
+              <Route path="/profile" element={<RutaPrivada><Profile /></RutaPrivada>} />
+              <Route path="/pedidos" element={<RutaPrivada><HistorialPedidos /></RutaPrivada>} />
             </Routes>
           </div>
           <Footer />
