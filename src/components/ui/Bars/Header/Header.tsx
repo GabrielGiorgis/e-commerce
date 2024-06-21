@@ -70,9 +70,9 @@ export default function Header() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Mi cuenta</MenuItem> {/* TODO: Pantalla profile de ejemplo auth0 */}
-      <MenuItem onClick={handleMenuClose}>Pedidos</MenuItem> {/* TODO: Crear pantalla de pedidos del cliente */}
-      <MenuItem onClick={handleLogout }>Cerrar sesión</MenuItem>
+      <MenuItem onClick={() => navigate("/profile")}>Mi cuenta</MenuItem>
+      <MenuItem onClick={() => navigate("/pedidos")}>Pedidos</MenuItem>
+      <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
     </Menu>
   );
 
@@ -102,7 +102,7 @@ export default function Header() {
         </IconButton>
         <p style={{ margin: "0" }}>Carrito</p>
       </MenuItem>
-      <MenuItem>
+      <MenuItem onClick={() => navigate("/profile")}>
         <IconButton
           size="large"
           aria-label="account of current user"
@@ -112,9 +112,9 @@ export default function Header() {
         >
           <AccountCircle />
         </IconButton>
-        <p style={{ margin: "0" }}>Mi cuenta</p> {/* TODO: Pantalla profile de ejemplo auth0 */}
+        <p style={{ margin: "0" }}>Mi cuenta</p>
       </MenuItem>
-      <MenuItem>
+      <MenuItem onClick={() => navigate("/pedidos")}>
         <IconButton
           size="large"
           aria-label="account of current user"
@@ -124,7 +124,7 @@ export default function Header() {
         >
           <ReceiptLongIcon />
         </IconButton>
-        <p style={{ margin: "0" }}>Pedidos</p> {/* TODO: Crear pantalla de pedidos del cliente */}
+        <p style={{ margin: "0" }}>Pedidos</p>
       </MenuItem>
       <MenuItem onClick={handleLogout}>
         <IconButton
