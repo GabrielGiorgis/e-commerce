@@ -99,7 +99,7 @@ export function Cart() {
   const { cart, addToCart, decreaseAmount, removeItemFromCart, cleanCart } =
     useCart();
   const [selectedSucursal, setSelectedSucursal] = useState<ISucursalShort>();
-  const [isSucursalOpen, setIsSucursalOpen] = useState<boolean>(false);
+  const [isSucursalOpen, setIsSucursalOpen] = useState<boolean>(true);
 
   const [envio, setEnvio] = useState<string>("DELIVERY");
   const [Pago, setPago] = useState<string>("EFECTIVO");
@@ -140,7 +140,6 @@ export function Cart() {
         Number(minutoCierre),
         Number(segundoCierre)
       );
-
       const isItOpen = apertura <= new Date() && cierre >= new Date();
       setIsSucursalOpen(isItOpen);
     }
@@ -229,7 +228,7 @@ export function Cart() {
         severity: "error",
       });
     }
-    if (localStorage.getItem("idUser")) {
+    if (!localStorage.getItem("idUser")) {
       return navigate("/login");
     }
     const total = products.reduce(
@@ -281,7 +280,7 @@ export function Cart() {
       totalCosto: costo,
       estado: "PENDIENTE",
       tipoEnvio: envio,
-      formaPago: Pago,
+      formaPago: envio == "DELIVERY" ? "MERCADO_PAGO" : Pago,
       fechaPedido: new Date().toISOString(),
       idDomicilio: 1,
       idSucursal: 1,
@@ -299,7 +298,6 @@ export function Cart() {
       detallePedidos: detallesPedido,
     };
     try {
-      console.log(pedido);
       await pedidoService.post(pedido);
       if (pedido.estado === "RECHAZADO") {
         setAlert({

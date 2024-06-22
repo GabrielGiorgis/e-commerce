@@ -1,0 +1,15 @@
+@font-face {
+    font-family: 'Harabara Mais';
+    src: url('/public/harabara/Harabara.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.mp-text {
+    font-family: 'Harabara Mais', sans-serif;
+    color: #2c2f73;
+}
+
+.mp-text span {
+    color: #009adb;
+}

@@ -13,6 +13,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import LogoutIcon from "@mui/icons-material/Logout";
+import LoginIcon from "@mui/icons-material/Login";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
 import "./Header.css";
@@ -116,6 +117,7 @@ export default function Header() {
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
     <Menu
+      style={{ marginTop: "40px" }}
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{
         vertical: "top",
@@ -130,47 +132,66 @@ export default function Header() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
       onClick={handleMobileMenuClose}>
-      <MenuItem onClick={() => navigate("/carrito")}>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={cart.length} color="error">
-            <ShoppingCartIcon />
-          </Badge>
-        </IconButton>
-        <p style={{ margin: "0" }}>Carrito</p>
-      </MenuItem>
-      <MenuItem onClick={() => navigate("/profile")}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit">
-          <AccountCircle />
-        </IconButton>
-        <p style={{ margin: "0" }}>Mi cuenta</p>
-      </MenuItem>
-      <MenuItem onClick={() => navigate("/pedidos")}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit">
-          <ReceiptLongIcon />
-        </IconButton>
-        <p style={{ margin: "0" }}>Pedidos</p>
-      </MenuItem>
-      <MenuItem onClick={handleLogout}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit">
-          <LogoutIcon />
-        </IconButton>
-        <p style={{ margin: "0" }}>Cerrar sesión</p>
-      </MenuItem>
+      {idUser ? (
+        <div>
+          <MenuItem onClick={() => navigate("/carrito")}>
+            <IconButton
+              size="large"
+              aria-label="show 4 new mails"
+              color="inherit">
+              <Badge badgeContent={cart.length} color="error">
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
+            <p style={{ margin: "0" }}>Carrito</p>
+          </MenuItem>
+          <MenuItem onClick={() => navigate("/profile")}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="primary-search-account-menu"
+              aria-haspopup="true"
+              color="inherit">
+              <AccountCircle />
+            </IconButton>
+            <p style={{ margin: "0" }}>Mi cuenta</p>
+          </MenuItem>
+          <MenuItem onClick={() => navigate("/pedidos")}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="primary-search-account-menu"
+              aria-haspopup="true"
+              color="inherit">
+              <ReceiptLongIcon />
+            </IconButton>
+            <p style={{ margin: "0" }}>Pedidos</p>
+          </MenuItem>
+          <MenuItem onClick={handleLogout}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="primary-search-account-menu"
+              aria-haspopup="true"
+              color="inherit">
+              <LogoutIcon />
+            </IconButton>
+            <p style={{ margin: "0" }}>Cerrar sesión</p>
+          </MenuItem>
+        </div>
+      ) : (
+        <MenuItem onClick={() => navigate("/login")}>
+          <IconButton
+            size="large"
+            aria-label="account of current user"
+            aria-controls="primary-search-account-menu"
+            aria-haspopup="true"
+            color="inherit">
+            <LoginIcon />
+          </IconButton>
+          <p style={{ margin: "0" }}>Iniciar sesión</p>
+        </MenuItem>
+      )}
     </Menu>
   );
 

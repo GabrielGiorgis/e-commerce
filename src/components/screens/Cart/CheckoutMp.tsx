@@ -64,7 +64,7 @@ export function CheckoutMp({ montoCarrito, pedido }: CheckoutMpProps) {
         severity: "error",
       });
     }
-    if (localStorage.getItem("idUser")) {
+    if (!localStorage.getItem("idUser")) {
       return navigate("/login");
     }
     if (montoCarrito > 0) {
