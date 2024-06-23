@@ -42,6 +42,9 @@ export const LoginClient = () => {
         const idClient = client?.id;
         if (idClient) {
           localStorage.setItem("idUser", idClient.toString());
+          if (!localStorage.getItem("idSucursalEcommerce")) {
+            return navigate("/sucursales");
+          }
           navigate("/");
         }
       } else {

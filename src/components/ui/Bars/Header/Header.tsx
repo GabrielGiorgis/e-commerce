@@ -57,6 +57,8 @@ export default function Header() {
 
   const handleLogout = () => {
     localStorage.removeItem("idUser");
+    localStorage.removeItem("idSucursalEcommerce");
+    handleMenuClose();
     navigate("/login");
   };
 
@@ -85,13 +87,18 @@ export default function Header() {
           <MenuItem key="orders" onClick={() => handleRedirect("pedidos")}>
             {"Pedidos"}
           </MenuItem>{" "}
-          {/* TODO: Crear pantalla de pedidos del cliente */}
           <MenuItem key="logout" onClick={handleLogout}>
             {"Cerrar sesión"}
           </MenuItem>
         </div>
       ) : (
-        <MenuItem onClick={() => navigate("/login")}>Iniciar sesión</MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleMenuClose();
+            return navigate("/login");
+          }}>
+          Iniciar sesión
+        </MenuItem>
       )}
     </Menu>
   );
@@ -101,9 +108,17 @@ export default function Header() {
       if (!localStorage.getItem("idSucursalEcommerce")) {
         if (
           location.pathname !== "/login" &&
-          location.pathname !== "/carrito"
+          location.pathname !== "/carrito" &&
+          location.pathname !== "/register"
         ) {
           navigate("/sucursales");
+        }
+      } else if (location.pathname == "/sucursales") {
+        navigate("/");
+      }
+      if (localStorage.getItem("idUser")) {
+        if (location.pathname == "/login" || location.pathname == "/register") {
+          navigate("/");
         }
       }
     };

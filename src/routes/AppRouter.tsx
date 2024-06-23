@@ -52,6 +52,7 @@ export const AppRouter = () => {
                   </RutaPrivada>
                 }
               />
+              <Route path="*" element={<Home />} />
             </Routes>
           </div>
           <Footer />
