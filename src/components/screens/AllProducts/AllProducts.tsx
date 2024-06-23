@@ -42,7 +42,6 @@ export const AllProducts = () => {
     } catch (error) {
       console.error("Error fetching categorias:", error);
     }
-    //acabo de traer a las categorías padre, ahora necesito hacer bien el filtrado de esto y del otro dropdown
   };
 
   const formatCategorias = (categoria: ICategoria[]) => {
@@ -92,8 +91,6 @@ export const AllProducts = () => {
     setSelectedCategory(e.target.value);
   };
 
-  //yo quiero que si se selecciona una categoría padre, y una de sus subcategorías están en el articulo,
-  // al seleccionar una categoría padre, debe seleccionar los productos donde esté una categoría hija
   const filteredArticulos = articulos
     .filter((articulo) => {
       const chosenCategory = categorias.find(
@@ -106,7 +103,10 @@ export const AllProducts = () => {
               (subCat) => subCat.id === articulo.categoria.id
             ))
         : true;
-      return isInSelectedCategory;
+      const matchesSearchTerm = articulo.denominacion
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      return isInSelectedCategory && matchesSearchTerm;
     })
     .sort((a, b) => {
       if (sortOrder === "asc") {
