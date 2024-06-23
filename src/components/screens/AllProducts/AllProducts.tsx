@@ -35,10 +35,44 @@ export const AllProducts = () => {
     try {
       const response = await fetch(`${API_URL}/categoria/ventas`);
       const data = await response.json();
-      setCategorias(data);
+
+      const formatedData = formatCategorias(data);
+      console.log(formatedData);
+      setCategorias(formatedData);
     } catch (error) {
       console.error("Error fetching categorias:", error);
     }
+    //acabo de traer a las categorías padre, ahora necesito hacer bien el filtrado de esto y del otro dropdown
+  };
+
+  const formatCategorias = (categoria: ICategoria[]) => {
+    const categoriasData: ICategoria[] = [];
+    const subCategorias: ICategoria[] = [];
+
+    categoria.forEach((categoria) => {
+      if (categoria.subCategorias.length > 0) {
+        categoria.subCategorias.forEach((subCategoria) => {
+          subCategorias.push(subCategoria);
+        });
+      }
+    });
+    categoria.forEach((categoria) => {
+      if (
+        !subCategorias.find((subCategoria) => subCategoria.id === categoria.id)
+      ) {
+        categoriasData.push(categoria);
+        if (categoria.subCategorias.length > 0) {
+          categoria.subCategorias.forEach((subCategoria) => {
+            categoriasData.find((categoria) => {
+              if (subCategoria.id === categoria.id) {
+                categoria.subCategorias.push(subCategoria);
+              }
+            });
+          });
+        }
+      }
+    });
+    return categoriasData;
   };
 
   useEffect(() => {
@@ -58,14 +92,22 @@ export const AllProducts = () => {
     setSelectedCategory(e.target.value);
   };
 
+  //yo quiero que si se selecciona una categoría padre, y una de sus subcategorías están en el articulo,
+  // al seleccionar una categoría padre, debe seleccionar los productos donde esté una categoría hija
   const filteredArticulos = articulos
-    .filter(
-      (articulo) =>
-        (selectedCategory
-          ? articulo.categoria.id === parseInt(selectedCategory)
-          : true) &&
-        articulo.denominacion.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    .filter((articulo) => {
+      const chosenCategory = categorias.find(
+        (categoria) => categoria.id == Number(selectedCategory)
+      );
+      const isInSelectedCategory = chosenCategory
+        ? articulo.categoria.id === chosenCategory.id ||
+          (chosenCategory.subCategorias &&
+            chosenCategory.subCategorias.some(
+              (subCat) => subCat.id === articulo.categoria.id
+            ))
+        : true;
+      return isInSelectedCategory;
+    })
     .sort((a, b) => {
       if (sortOrder === "asc") {
         return a.precioVenta - b.precioVenta;

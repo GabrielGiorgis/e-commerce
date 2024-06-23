@@ -20,15 +20,20 @@ export const CartContext = createContext<CartContextType>({
 export function CartContextProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<ICartItem[]>([]);
 
+  const getUniqueKey = (item: ICartItem) => {
+    return `${item.product.id}-${item.product.denominacion}`;
+  };
+
   const addToCart = useCallback((product: ICartItem) => {
     setCart((prevCart) => {
       const exists = prevCart.some(
-        (item) => item.product.id === product.product.id
+        (item) => getUniqueKey(item) === getUniqueKey(product)
       );
 
+      console.log(`existe ${product.product.id}`, cart);
       if (exists) {
         return prevCart.map((item) =>
-          item.product.id === product.product.id
+          getUniqueKey(item) === getUniqueKey(product)
             ? { ...item, amount: item.amount + 1 }
             : item
         );
@@ -40,15 +45,18 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
 
   const removeItemFromCart = useCallback((product: ICartItem) => {
     setCart((prevCart) =>
-      prevCart.filter((item) => item.product.id !== product.product.id)
+      prevCart.filter((item) => getUniqueKey(item) !== getUniqueKey(product))
     );
   }, []);
 
   const decreaseAmount = useCallback((product: ICartItem) => {
+    if (product.amount === 1) {
+      removeItemFromCart(product);
+    }
     setCart((prevCart) =>
       prevCart
         .map((item) =>
-          item.product.id === product.product.id && item.amount > 1
+          getUniqueKey(item) === getUniqueKey(product) && item.amount > 1
             ? { ...item, amount: item.amount - 1 }
             : item
         )

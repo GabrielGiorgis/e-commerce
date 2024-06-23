@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IArticulo } from "../../../types/IArticulo";
-import ModalProduct from "./ModalProduct";
+import ModalProduct from "../../ui/modals/modalProducts/ModalProduct";
 import "./ProductItem.css";
 import { LoadingButton } from "@mui/lab";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -9,7 +9,6 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, IconButton } from "@mui/material";
 import { useCart } from "../../../hooks/useCart";
-import { IArticuloCart } from "../../../types/IArticuloCart";
 import { ICartItem } from "../../../types/Cart/ICartItem";
 import { useNavigate } from "react-router-dom";
 
@@ -56,12 +55,13 @@ export const ProductItem = ({ product }: IProductItem) => {
   return (
     <>
       <div className={disabled ? "card card-disabled" : "card"}>
-        <div className="card-img">
-          <img src={product.imagenes[0].url} alt={product.imagenes[0].name} />
-        </div>
-        <div className="card-info">
-          <p className="text-title">{product.denominacion}</p>
-          <p className="text-body"></p>
+        <div className="top-card-container">
+          <div className="card-img">
+            <img src={product.imagenes[0].url} alt={product.imagenes[0].name} />
+          </div>
+          <div className="card-info">
+            <p className="text-title">{product.denominacion}</p>
+          </div>
         </div>
         <div className="card-footer">
           <span className="text-title">${product.precioVenta.toFixed(2)}</span>
@@ -76,7 +76,10 @@ export const ProductItem = ({ product }: IProductItem) => {
             <Box display="flex" gap="0" alignItems="center">
               <IconButton
                 key={item.product.id}
-                onClick={() => decreaseAmount(item)}
+                onClick={() => {
+                  setItem({ ...item, amount: item.amount - 1 });
+                  decreaseAmount(item);
+                }}
                 color="error">
                 <RemoveIcon />
               </IconButton>
@@ -87,7 +90,12 @@ export const ProductItem = ({ product }: IProductItem) => {
                 value={item.amount}
                 readOnly
               />
-              <IconButton onClick={() => addToCart(item)} color="error">
+              <IconButton
+                onClick={() => {
+                  setItem({ ...item, amount: item.amount + 1 });
+                  addToCart(item);
+                }}
+                color="error">
                 <AddIcon />
               </IconButton>
             </Box>
@@ -103,6 +111,7 @@ export const ProductItem = ({ product }: IProductItem) => {
                 }
                 setLoading(true);
                 setTimeout(() => {
+                  console.log("added to cart", product);
                   addToCart({ product: product, amount: 1 });
                   setItem({ product: product, amount: 1 });
                   setLoading(false);

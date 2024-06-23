@@ -26,7 +26,6 @@ const ProductsList = () => {
     setArticulos(data);
     setIsLoading(false);
   };
-
   const fetchCategoria = async () => {
     const response = await fetch(`${API_URL}/categoria/${id}`);
     const data = await response.json();
@@ -69,8 +68,7 @@ const ProductsList = () => {
       href="/"
       onClick={() => {
         navigate("/");
-      }}
-    >
+      }}>
       Nuestros productos
     </Link>,
     <Typography key="3" color="text.primary">
@@ -87,8 +85,7 @@ const ProductsList = () => {
           <Breadcrumbs
             separator={<NavigateNextIcon fontSize="small" />}
             aria-label="breadcrumb"
-            sx={{ margin: "1rem" }}
-          >
+            sx={{ margin: "1rem" }}>
             {breadcrumbs}
           </Breadcrumbs>
           <h1 className="title">{categoria.denominacion}</h1>

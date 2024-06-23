@@ -1,10 +1,12 @@
-import { IArticulo } from "../../../types/IArticulo";
 import { Modal, Typography, IconButton } from "@mui/material";
 import "./ModalProduct.css";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { ICartItem } from "../../../../types/Cart/ICartItem";
+import { IArticulo } from "../../../../types/IArticulo";
+import { IPromocion } from "../../../../types/IPromocion";
 
 interface IModalProduct {
-  product: IArticulo;
+  product: ICartItem["product"];
   openModal: boolean;
   handleCloseModal: () => void;
 }
@@ -25,16 +27,17 @@ export const ModalProduct = ({
           alignItems: "center",
           justifyContent: "center",
           backdropFilter: "blur(5px)",
-        }}
-      >
-        <div className="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+          // width: "400px",
+        }}>
+        <div
+          style={{ width: "400px" }}
+          className="modal-dialog modal-dialog-scrollable modal-dialog-centered">
           <div className="modal-content">
             <button
               type="button"
               className="btn-close"
               aria-label="Close"
-              onClick={handleCloseModal}
-            ></button>
+              onClick={handleCloseModal}></button>
             <div className="modal-media">
               <img
                 src={product.imagenes[0].url}
@@ -49,9 +52,35 @@ export const ModalProduct = ({
             </div>
             <div className="modal-body">
               <Typography variant="body2" color="text.secondary">
-                ${product.precioVenta.toFixed(2)}
+                $
+                {(product as IArticulo)?.precioVenta?.toFixed(2) ||
+                  (product as IPromocion)?.precioPromocional?.toFixed(2)}
               </Typography>
-              <p className="modal-description" style={{ whiteSpace: "pre-wrap" }}>{product.descripcion}</p>
+              <p
+                className="modal-description"
+                style={{ whiteSpace: "pre-wrap" }}>
+                {(product as IArticulo)?.descripcion ||
+                  (product as IPromocion)?.descripcionDescuento}
+              </p>
+              {(() => {
+                if (
+                  "promocionDetalles" in product &&
+                  Array.isArray(product.promocionDetalles)
+                ) {
+                  return (
+                    <>
+                      <p>Contiene: </p>
+                      {product.promocionDetalles.map((detalle, index) => (
+                        <span className="text-body" key={index}>
+                          <b>{detalle.cantidad}x</b> -{" "}
+                          {detalle.articulo?.denominacion}
+                        </span>
+                      ))}
+                    </>
+                  );
+                }
+                return null;
+              })()}
             </div>
             <div className="modal-footer">
               <IconButton>

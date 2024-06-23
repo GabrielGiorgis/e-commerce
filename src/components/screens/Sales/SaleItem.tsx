@@ -1,8 +1,15 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { IPromocion } from "../../../types/IPromocion";
 import { useCart } from "../../../hooks/useCart";
 import { LoadingButton } from "@mui/lab";
 import { ICartItem } from "../../../types/Cart/ICartItem";
+import DescriptionIcon from "@mui/icons-material/Description";
+import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from "@mui/icons-material/Add";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { Box, IconButton } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import ModalProduct from "../../ui/modals/modalProducts/ModalProduct";
 
 interface SaleItemProps {
   promocion: IPromocion;
@@ -18,6 +25,10 @@ export const SaleItem = ({ promocion }: SaleItemProps) => {
       amount: 0,
     }
   );
+
+  const [openModal, setOpenModal] = React.useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (item.amount === 0) {
@@ -43,45 +54,93 @@ export const SaleItem = ({ promocion }: SaleItemProps) => {
   };
 
   return (
-    <div
-      className="card"
-      style={disabled ? { opacity: 0.5, cursor: "not-allowed" } : {}}>
-      <div className="card-img">
-        <img src={promocion.imagenes[0].url} alt={promocion.denominacion} />
-      </div>
-      <div className="card-body">
-        <h3>{promocion.denominacion}</h3>
-      </div>
+    <>
       <div
-        className="card-footer"
-        style={{ display: "flex", flexDirection: "column" }}>
-        <span className="text-title">
-          ${promocion.precioPromocional.toFixed(2)}
-        </span>
-        <span className="text-body">
-          Válida hasta el {promocion.fechaHasta}
-        </span>
-        {promocion.promocionDetalles.map((detalle, index) => (
-          <span className="text-body" key={index}>
-            {detalle.articulo?.denominacion} - {detalle.cantidad}
+        className="card"
+        style={disabled ? { opacity: 0.5, cursor: "not-allowed" } : {}}>
+        <div className="top-card-container">
+          <div className="card-img">
+            <img src={promocion.imagenes[0].url} alt={promocion.denominacion} />
+          </div>
+          <div className="card-info">
+            <h3 className="text-title">{promocion.denominacion}</h3>
+          </div>
+        </div>
+        <div
+          className="card-footer"
+          style={{ display: "flex", flexDirection: "column" }}>
+          {/* <span className="text-title">
+            ${promocion.precioPromocional.toFixed(2)}
+          </span> */}
+          <span className="text-body">
+            Válida hasta el {promocion.fechaHasta}
           </span>
-        ))}
+        </div>
+        <div className="card-footer">
+          <span className="text-title">
+            ${promocion.precioPromocional.toFixed(2)}
+          </span>
+          <IconButton onClick={() => setOpenModal(true)}>
+            <DescriptionIcon className="card-button" />
+          </IconButton>
+          {cart.find(
+            (item: ICartItem) =>
+              item.product.denominacion === promocion.denominacion &&
+              item.product.id === promocion.id
+          ) ? (
+            <Box display="flex" gap="0" alignItems="center">
+              <IconButton
+                key={item.product.id}
+                onClick={() => {
+                  setItem({ ...item, amount: item.amount - 1 });
+                  decreaseAmount(item);
+                }}
+                color="error">
+                <RemoveIcon />
+              </IconButton>
+              <input
+                className="amount"
+                min="0"
+                type="number"
+                value={item.amount}
+                readOnly
+              />
+              <IconButton
+                onClick={() => {
+                  setItem({ ...item, amount: item.amount + 1 });
+                  addToCart(item);
+                }}
+                color="error">
+                <AddIcon />
+              </IconButton>
+            </Box>
+          ) : (
+            <LoadingButton
+              size="small"
+              loading={loading}
+              variant="outlined"
+              color="error"
+              onClick={() => {
+                if (!localStorage.getItem("idUser")) {
+                  return navigate("/login");
+                }
+                setLoading(true);
+                setTimeout(() => {
+                  addToCart({ product: promocion, amount: 1 });
+                  setItem({ product: promocion, amount: 1 });
+                  setLoading(false);
+                }, 1500);
+              }}>
+              <ShoppingCartIcon className="card-button" />
+            </LoadingButton>
+          )}
+        </div>
       </div>
-      <LoadingButton
-        loading={loading}
-        onClick={() => {
-          setLoading(true);
-          setTimeout(() => {
-            addToCart(item);
-            setItem((prevItem) => ({
-              ...prevItem,
-              amount: prevItem.amount + 1,
-            }));
-            setLoading(false);
-          }, 1000);
-        }}>
-        ¡Agregar al carrito!
-      </LoadingButton>
-    </div>
+      <ModalProduct
+        product={promocion}
+        openModal={openModal}
+        handleCloseModal={() => setOpenModal(false)}
+      />
+    </>
   );
 };

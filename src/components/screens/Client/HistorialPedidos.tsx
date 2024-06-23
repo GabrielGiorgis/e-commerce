@@ -13,12 +13,14 @@ import { IPedidoPost } from "../../../types/Pedido/IPedidoPost";
 import { ClienteService } from "../../../services/ClienteService";
 import { format, isToday, isYesterday, differenceInDays } from "date-fns";
 import { es } from "date-fns/locale";
-import { Link, Tooltip } from "@mui/material";
+import { Link, Tooltip, TableSortLabel } from "@mui/material";
 import MoneyIcon from "@mui/icons-material/Money";
 import "./pedidosStyle.css";
 
 const HistorialPedidos = () => {
   const [cliente, setCliente] = useState<ICliente>();
+  const [order, setOrder] = useState<"asc" | "desc">("asc");
+  const [orderBy, setOrderBy] = useState<string>("fechaPedido");
 
   const API_URL = import.meta.env.VITE_API_URL;
   const clienteService = new ClienteService(`${API_URL}/cliente`);
@@ -41,7 +43,7 @@ const HistorialPedidos = () => {
 
   const getRelativeDate = (date: string) => {
     const parsedDate = new Date(date);
-    parsedDate.setHours(parsedDate.getHours() + 3); // Set timezone to GMT+3;
+    parsedDate.setHours(parsedDate.getHours() + 3);
     if (isToday(parsedDate)) {
       return "Hoy";
     } else if (isYesterday(parsedDate)) {
@@ -55,26 +57,59 @@ const HistorialPedidos = () => {
   };
 
   const transformPedidosToRows = (pedidos: IPedidoPost[]) => {
-    return pedidos
-      .sort(
-        (a, b) =>
-          new Date(b.fechaPedido).getTime() - new Date(a.fechaPedido).getTime()
-      )
-      .map((pedido) => {
-        const parsedDate = new Date(pedido.fechaPedido);
-        return {
-          id: pedido.id,
-          fecha: format(parsedDate, "dd/MM/yyyy"),
-          hora: format(parsedDate, "HH:mm:ss"),
-          relativo: getRelativeDate(pedido.fechaPedido),
-          estado: pedido.estado,
-          tipoEnvio: pedido.tipoEnvio,
-          total: pedido.total,
-          formaPago: pedido.formaPago,
-          factura: pedido.factura, // Assume 'factura' has the information needed for the download
-        };
-      });
+    return pedidos.map((pedido) => {
+      console.log();
+      const parsedDate = new Date(pedido.fechaPedido);
+      return {
+        id: pedido.id,
+        fechaPedido: parsedDate,
+        fecha: format(parsedDate, "dd/MM/yyyy"),
+        hora: pedido.horaEstimadaFinalizacion,
+        relativo: getRelativeDate(pedido.fechaPedido),
+        estado: pedido.estado,
+        tipoEnvio: pedido.tipoEnvio,
+        total: pedido.total,
+        formaPago: pedido.formaPago,
+        factura: pedido.factura,
+      };
+    });
   };
+
+  const handleRequestSort = (property: string) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
+  const sortedRows = cliente
+    ? transformPedidosToRows(cliente.pedidos)
+        .slice()
+        .sort((a, b) => {
+          if (orderBy === "fechaPedido") {
+            return order === "asc"
+              ? a.fechaPedido.getTime() - b.fechaPedido.getTime()
+              : b.fechaPedido.getTime() - a.fechaPedido.getTime();
+          }
+
+          const valueA = (a as any)[orderBy];
+          const valueB = (b as any)[orderBy];
+
+          if (valueA === null || valueA === undefined) return 1;
+          if (valueB === null || valueB === undefined) return -1;
+
+          if (typeof valueA === "string" && typeof valueB === "string") {
+            return order === "asc"
+              ? valueA.localeCompare(valueB)
+              : valueB.localeCompare(valueA);
+          }
+
+          if (typeof valueA === "number" && typeof valueB === "number") {
+            return order === "asc" ? valueA - valueB : valueB - valueA;
+          }
+
+          return 0;
+        })
+    : [];
 
   const statusOptions = [
     { label: "PENDIENTE", color: "#FFEB3B" },
@@ -88,7 +123,6 @@ const HistorialPedidos = () => {
   ];
 
   if (cliente) {
-    const rows = transformPedidosToRows(cliente.pedidos);
     return (
       <div style={{ padding: "30px " }}>
         <h2>
@@ -99,19 +133,54 @@ const HistorialPedidos = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Pago</TableCell>
-                <TableCell>Fecha</TableCell>
-                <TableCell>Hora</TableCell>
-                <TableCell>Envío</TableCell>
-                <TableCell>Estado</TableCell>
-                <TableCell>Total</TableCell>
+                <TableCell>
+                  <TableSortLabel
+                    active={orderBy === "fechaPedido"}
+                    direction={orderBy === "fechaPedido" ? order : "asc"}
+                    onClick={() => handleRequestSort("fechaPedido")}>
+                    Fecha
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell>
+                  <TableSortLabel
+                    active={orderBy === "hora"}
+                    direction={orderBy === "hora" ? order : "asc"}
+                    onClick={() => handleRequestSort("hora")}>
+                    Hora
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell>
+                  <TableSortLabel
+                    active={orderBy === "tipoEnvio"}
+                    direction={orderBy === "tipoEnvio" ? order : "asc"}
+                    onClick={() => handleRequestSort("tipoEnvio")}>
+                    Envío
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell>
+                  <TableSortLabel
+                    active={orderBy === "estado"}
+                    direction={orderBy === "estado" ? order : "asc"}
+                    onClick={() => handleRequestSort("estado")}>
+                    Estado
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell>
+                  <TableSortLabel
+                    active={orderBy === "total"}
+                    direction={orderBy === "total" ? order : "asc"}
+                    onClick={() => handleRequestSort("total")}>
+                    Total
+                  </TableSortLabel>
+                </TableCell>
                 <TableCell>Descargar Factura</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row, index) => (
+              {sortedRows.map((row, index) => (
                 <TableRow key={index}>
                   <TableCell>
-                    {row.formaPago == "EFECTIVO" ? (
+                    {row.formaPago === "EFECTIVO" ? (
                       <Tooltip title="Pago con efectivo" arrow>
                         <MoneyIcon style={{ color: "#4caf50" }} />
                       </Tooltip>
@@ -126,7 +195,7 @@ const HistorialPedidos = () => {
                   <TableCell>{row.relativo}</TableCell>
                   <TableCell>{row.hora}</TableCell>
                   <TableCell>
-                    {row.tipoEnvio == "DELIVERY"
+                    {row.tipoEnvio === "DELIVERY"
                       ? "Delivery"
                       : "Retiro en local"}
                   </TableCell>

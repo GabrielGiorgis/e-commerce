@@ -1,0 +1,103 @@
+/* ModalProduct.css */
+
+.modal-dialog {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 400px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 16px;
+    border-radius: 25px;
+}
+
+.modal-content {
+    border-radius: 16px;
+    overflow: hidden;
+    width: 400px;
+    margin: auto;
+    background: #fff;
+}
+
+.modal-header {
+    padding: 16px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-weight: 900;
+    font-size: 1.5em;
+    line-height: 1.5;
+}
+
+.btn-close {
+    border: none;
+    background: none;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.3s;
+    align-self: flex-end;
+    margin-bottom: 10px;
+}
+
+.btn-close:hover {
+    color: #d9534f;
+}
+
+.modal-media {
+    text-align: center;
+    width: 368px;
+    height: 240px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.modal-media img {
+    object-fit: cover;
+    transition: 0.3s ease;
+    width: 100%;
+    height: 100%;
+}
+
+.modal-media:hover img {
+    transform: scale(1.3);
+    /* box-shadow: rgba(226, 196, 63, 0.25) 0px 13px 47px -5px, rgba(180, 71, 71, 0.3) 0px 8px 16px -8px; */
+}
+
+
+/* .modal-image {
+    width: 400px;
+    height: 250px;
+    border-bottom: 1px solid #e9ecef;
+} */
+
+.modal-body {
+    padding: 16px;
+}
+
+.modal-body p {
+    margin: 0;
+    padding: 8px 0;
+    font-size: 1rem;
+}
+
+.modal-footer {
+    padding: 16px;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.add-to-cart-btn {
+    background-color: #5cb85c;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #4cae4c;
+}
