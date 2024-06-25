@@ -4,3 +4,16 @@ body {
     height: 100vh;
     box-sizing: border-box;
 }
+
+* {
+    scroll-behavior: smooth;
+    scroll-margin: 70px;
+}
+
+.header-links {
+    text-decoration: none;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0 10px;
+}

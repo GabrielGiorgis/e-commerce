@@ -118,7 +118,7 @@ export const AllProducts = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="products-list-container">
+        <div id="articulo" className="products-list-container">
           <h1 className="title">Todos los artículos</h1>
           <div className="filters">
             <input
@@ -128,23 +128,6 @@ export const AllProducts = () => {
               onChange={handleSearchChange}
               className="search-input"
             />
-            {/* <div className="category-dropdown" style={{ marginRight: "1rem" }}>
-              <select
-                value={selectedCategory}
-                onChange={handleCategoryChange}
-                style={{ borderRadius: "0.5rem", padding: "0.5rem" }}>
-                <option value="">Todas las categorías</option>
-                {categorias.map((categoria) => (
-                  <option
-                    key={categoria.id}
-                    value={categoria.id.toString()}
-                    style={{ backgroundColor: "white", color: "black" }}>
-                    {categoria.denominacion}
-                  </option>
-                ))}
-              </select>
-            </div> */}
-
             <div className="sort-dropdown" style={{ marginRight: "1rem" }}>
               <select
                 value={sortOrder}
