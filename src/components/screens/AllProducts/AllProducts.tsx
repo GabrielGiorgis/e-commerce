@@ -36,7 +36,6 @@ export const AllProducts = () => {
     try {
       const response = await fetch(`${API_URL}/categoria/ventas`);
       const data = await response.json();
-
       const formatedData = formatCategorias(data);
       setCategorias(formatedData);
     } catch (error) {
