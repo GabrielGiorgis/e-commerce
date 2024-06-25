@@ -87,10 +87,6 @@ export const AllProducts = () => {
     setSortOrder(e.target.value);
   };
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCategory(e.target.value);
-  };
-
   const filteredArticulos = articulos
     .filter((articulo) => {
       const chosenCategory = categorias.find(
@@ -174,7 +170,11 @@ export const AllProducts = () => {
               return (
                 <Button
                   key={categoria.id}
-                  onClick={() => setSelectedCategory(categoria.id.toString())}
+                  onClick={() => {
+                    selectedCategory == categoria.id.toString()
+                      ? setSelectedCategory("")
+                      : setSelectedCategory(categoria.id.toString());
+                  }}
                   color="error"
                   variant={
                     selectedCategory &&

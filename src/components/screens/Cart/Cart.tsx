@@ -298,8 +298,8 @@ export function Cart() {
       detallePedidos: detallesPedido,
     };
     try {
-      await pedidoService.post(pedido);
-      if (pedido.estado === "RECHAZADO") {
+      const response = await pedidoService.post(pedido);
+      if (response.estado === "RECHAZADO") {
         setAlert({
           message:
             "Su pedido fue rechazado por falta de insumos, sepa disculpar.",

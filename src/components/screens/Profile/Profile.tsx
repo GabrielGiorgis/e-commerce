@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { IClientePost } from "../../../types/Cliente/IClientePost";
-// import "./UserProfile.css";
-import { Box, Button, Grid, IconButton, Tooltip } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { Form } from "react-bootstrap";
 import { ClienteService } from "../../../services/ClienteService";
 import { IDomicilioPost } from "../../../types/Domicilio/IDomicilioPost";
 import { IPedidoPost } from "../../../types/Pedido/IPedidoPost";
 import DomicilioCard from "./DomicilioCard";
-import { IDomicilio } from "../../../types/Domicilio/IDomicilio";
+import { IDomicilio } from "../../../types/Domicilio";
 import { ModalDomicilio } from "../../ui/modals/modalDomicilio/ModalDomicilio";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -29,7 +35,6 @@ export const Profile = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [domicilios, setDomicilios] = useState<IDomicilio[]>([]);
   const [editingId, setEditingId] = useState<number>(0);
-
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
 
@@ -58,12 +63,10 @@ export const Profile = () => {
       cliente.telefono.trim() === "" ||
       cliente.usuarioCliente.email.trim() === "" ||
       cliente.usuarioCliente.userName.trim() === ""
-      // cliente.usuarioCliente.password.trim() === ""
     ) {
       setError("Por favor, complete todos los campos");
       return;
     }
-    console.log("antes del put ", cliente);
 
     try {
       await clienteService.put(editingId, cliente);
@@ -132,7 +135,6 @@ export const Profile = () => {
             email: response.usuarioCliente.email,
           },
         });
-        console.log(response.domicilios);
         if (response.domicilios && response.domicilios.length > 0) {
           setSelectedDomicilioId(response.domicilios[0].id);
           setDomicilios(
@@ -148,22 +150,22 @@ export const Profile = () => {
     };
     fetchCliente();
   }, []);
+
   const handleDomicilioSelect = (id: number) => {
     localStorage.setItem("idUserDomicilio", id.toString());
     setSelectedDomicilioId(id);
   };
 
-  useEffect(() => {}, []);
-
   return (
     <>
-      <section style={{ padding: "30px" }}>
-        <h1>Editar Perfil</h1>
-        {error && <p className="error-message">{error}</p>}
+      <Box sx={{ padding: { xs: "20px", md: "30px" } }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Editar Perfil
+        </Typography>
+        {error && <Typography color="error">{error}</Typography>}
         <Form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
-            <Grid item xs={6}>
-              {/* NOMBRE */}
+            <Grid item xs={12} sm={6}>
               <Form.Group controlId="nombre" className="mb-3">
                 <Form.Label>Nombre</Form.Label>
                 <Form.Control
@@ -175,8 +177,7 @@ export const Profile = () => {
                 />
               </Form.Group>
             </Grid>
-            <Grid item xs={6}>
-              {/* APELLIDO */}
+            <Grid item xs={12} sm={6}>
               <Form.Group controlId="apellido" className="mb-3">
                 <Form.Label>Apellido</Form.Label>
                 <Form.Control
@@ -188,10 +189,7 @@ export const Profile = () => {
                 />
               </Form.Group>
             </Grid>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              {/* TELEFONO */}
+            <Grid item xs={12} sm={6}>
               <Form.Group controlId="telefono" className="mb-3">
                 <Form.Label>Teléfono</Form.Label>
                 <Form.Control
@@ -203,23 +201,19 @@ export const Profile = () => {
                 />
               </Form.Group>
             </Grid>
-            <Grid item xs={6}>
-              {/* NOMBRE DE USUARIO */}
+            <Grid item xs={12} sm={6}>
               <Form.Group controlId="userName" className="mb-3">
                 <Form.Label>Nombre de Usuario</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Ingrese su nombre de usuario"
                   name="usuario.userName"
-                  value={cliente.usuarioCliente.userName} //acá jode
+                  value={cliente.usuarioCliente.userName}
                   onChange={handleInputChange}
                 />
               </Form.Group>
             </Grid>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              {/* EMAIL */}
+            <Grid item xs={12} sm={6}>
               <Form.Group controlId="email" className="mb-3">
                 <Form.Label>Email</Form.Label>
                 <Form.Control
@@ -231,8 +225,7 @@ export const Profile = () => {
                 />
               </Form.Group>
             </Grid>
-            <Grid item xs={6}>
-              {/* CONTRASEÑA */}
+            <Grid item xs={12} sm={6}>
               <Form.Group controlId="password" className="mb-3">
                 <Form.Label>Contraseña</Form.Label>
                 <Form.Control
@@ -245,16 +238,15 @@ export const Profile = () => {
               </Form.Group>
             </Grid>
           </Grid>
-          <Box className="box-row-center">
-            <Box className="box-auto-flex" />
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
             <Button type="submit" variant="contained" color="primary">
               Guardar Cambios
             </Button>
           </Box>
-          <h3 style={{ textAlign: "left", marginTop: "20px" }}>
+          <Typography variant="h6" component="h3" sx={{ mt: 4 }}>
             Seleccionar Domicilio
-          </h3>
-          <Grid container spacing={2}>
+          </Typography>
+          <Grid container spacing={2} style={{ justifyContent: "flex-start" }}>
             {domicilios.map((domicilio) => (
               <Grid item key={domicilio.id}>
                 <DomicilioCard
@@ -270,13 +262,11 @@ export const Profile = () => {
                 />
               </Grid>
             ))}
-            <Grid item style={{ display: "flex", alignItems: "center" }}>
+            <Grid item sx={{ display: "flex", alignItems: "center" }}>
               <IconButton
                 color="primary"
                 aria-label="add"
-                onClick={() => {
-                  setOpenModal(true);
-                }}>
+                onClick={() => setOpenModal(true)}>
                 <Tooltip title="Agregar domicilio" arrow>
                   <AddIcon />
                 </Tooltip>
@@ -284,7 +274,7 @@ export const Profile = () => {
             </Grid>
           </Grid>
         </Form>
-      </section>
+      </Box>
       <ModalDomicilio
         show={openModal}
         handleClose={() => setOpenModal(false)}
