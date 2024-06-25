@@ -4,6 +4,7 @@ import { Loader } from "../../ui/Loader/Loader";
 import { ProductItem } from "../ProductItem/ProductItem";
 import "./AllProducts.css";
 import { IArticulo } from "../../../types/IArticulo";
+import { Button } from "@mui/material";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -37,7 +38,6 @@ export const AllProducts = () => {
       const data = await response.json();
 
       const formatedData = formatCategorias(data);
-      console.log(formatedData);
       setCategorias(formatedData);
     } catch (error) {
       console.error("Error fetching categorias:", error);
@@ -133,7 +133,7 @@ export const AllProducts = () => {
               onChange={handleSearchChange}
               className="search-input"
             />
-            <div className="category-dropdown" style={{ marginRight: "1rem" }}>
+            {/* <div className="category-dropdown" style={{ marginRight: "1rem" }}>
               <select
                 value={selectedCategory}
                 onChange={handleCategoryChange}
@@ -148,7 +148,8 @@ export const AllProducts = () => {
                   </option>
                 ))}
               </select>
-            </div>
+            </div> */}
+
             <div className="sort-dropdown" style={{ marginRight: "1rem" }}>
               <select
                 value={sortOrder}
@@ -167,6 +168,24 @@ export const AllProducts = () => {
                 </option>
               </select>
             </div>
+          </div>
+          <div className="category-dropdown" style={{ marginRight: "1rem" }}>
+            {categorias.map((categoria) => {
+              return (
+                <Button
+                  key={categoria.id}
+                  onClick={() => setSelectedCategory(categoria.id.toString())}
+                  color="error"
+                  variant={
+                    selectedCategory &&
+                    selectedCategory == categoria.id.toString()
+                      ? "contained"
+                      : "outlined"
+                  }>
+                  {categoria.denominacion}
+                </Button>
+              );
+            })}
           </div>
           <ul className="products-list">
             {filteredArticulos.map((articulo, index) => (

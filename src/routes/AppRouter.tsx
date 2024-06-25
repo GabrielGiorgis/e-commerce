@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
 import { Home } from "../components/screens/Home/Home";
-import ProductsList from "../components/screens/ProductsList/ProductsList";
 import Header from "../components/ui/Bars/Header/Header";
 import { Footer } from "../components/ui/Bars/Footer/Footer";
 import { Cart } from "../components/screens/Cart/Cart";
@@ -9,12 +8,9 @@ import "./AppRouter.css";
 import { LoginClient } from "../components/screens/UserCLient/LoginClient";
 import { RutaPrivada } from "../components/screens/UserCLient/RutaPrivada";
 import Sucursales from "../components/screens/Sucursales/Sucursales";
-import HistorialPedidos from "../components/screens/Client/HistorialPedidos";
-import Profile from "../components/screens/Client/Profile";
+import HistorialPedidos from "../components/screens/Pedidos/HistorialPedidos";
+import { Profile } from "../components/screens/Profile/Profile";
 import { RegisterClient } from "../components/screens/UserCLient/RegisterClient";
-import { useEffect, useState } from "react";
-import { ICliente } from "../types/ICliente";
-import { ClienteService } from "../services/ClienteService";
 
 export const AppRouter = () => {
   return (

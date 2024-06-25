@@ -1,0 +1,62 @@
+.domicilio-card {
+    cursor: pointer;
+    transition: box-shadow 0.3s ease-in-out;
+    display: flex;
+    width: 300px;
+}
+
+.domicilio-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.edit-button {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    /* position: absolute; */
+}
+
+.domicilio-card:hover .edit-button {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.domicilio-card.selected {
+    .domicilio-card {
+        cursor: pointer;
+        transition: box-shadow 0.3s ease-in-out;
+        display: flex;
+    }
+    .domicilio-card:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .domicilio-card.selected {
+        border: 2px solid #1975d1;
+    }
+    .domicilio-card-content {
+        display: flex;
+        align-items: center;
+    }
+    .domicilio-radio {
+        margin-right: 16px;
+    }
+    .domicilio-details {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.domicilio-card-content {
+    display: flex;
+    align-items: center;
+}
+
+.domicilio-radio {
+    margin-right: 16px;
+}
+
+.domicilio-details {
+    display: flex;
+    flex-direction: column;
+}

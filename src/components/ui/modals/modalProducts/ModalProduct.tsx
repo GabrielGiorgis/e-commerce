@@ -30,7 +30,12 @@ export const ModalProduct = ({
           // width: "400px",
         }}>
         <div
-          style={{ width: "400px" }}
+          style={{
+            width: "400px",
+            borderRadius: "25px",
+            height: "inherit",
+            padding: "16px",
+          }}
           className="modal-dialog modal-dialog-scrollable modal-dialog-centered">
           <div className="modal-content">
             <button

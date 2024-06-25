@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./LoginClient.css";
-import { IUsuarioCliente } from "../../../types/IUsuarioCliente";
+import { IUsuarioCliente } from "../../../types/UsuarioCliente/IUsuarioCliente";
 import { UsuarioService } from "../../../services/UsuarioService";
 import { useNavigate } from "react-router-dom";
 import { ClienteService } from "../../../services/ClienteService";
@@ -38,10 +38,10 @@ export const LoginClient = () => {
       console.log(response);
       if (response) {
         const client = await clienteService.getByUserId(response.id);
-        console.log(client);
         const idClient = client?.id;
         if (idClient) {
           localStorage.setItem("idUser", idClient.toString());
+          localStorage.setItem("idUserDomicilio", client.domicilios[0].id);
           if (!localStorage.getItem("idSucursalEcommerce")) {
             return navigate("/sucursales");
           }

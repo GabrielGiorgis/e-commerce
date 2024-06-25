@@ -1,4 +1,4 @@
-import { IUsuarioCliente } from "../types/IUsuarioCliente";
+import { IUsuarioCliente } from "../types/UsuarioCliente/IUsuarioCliente";
 import { BackendClient } from "./BackendClient";
 
 export class UsuarioService extends BackendClient<

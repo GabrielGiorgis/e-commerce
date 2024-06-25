@@ -57,6 +57,7 @@ export default function Header() {
 
   const handleLogout = () => {
     localStorage.removeItem("idUser");
+    localStorage.removeItem("idUserDomicilio");
     localStorage.removeItem("idSucursalEcommerce");
     handleMenuClose();
     navigate("/login");

@@ -58,10 +58,15 @@ export const RegisterClient = () => {
 
   const handleDomicilioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const updatedDomicilios = [{
-      ...cliente.domicilios[0],
-      [name]: name === "numero" || name === "idLocalidad" || name === "nroDpto" ? parseInt(value) : value
-    }];
+    const updatedDomicilios = [
+      {
+        ...cliente.domicilios[0],
+        [name]:
+          name === "numero" || name === "idLocalidad" || name === "nroDpto"
+            ? parseInt(value)
+            : value,
+      },
+    ];
     setCliente({
       ...cliente,
       domicilios: updatedDomicilios,
@@ -97,8 +102,7 @@ export const RegisterClient = () => {
       <Stepper
         activeStep={activeStep}
         alternativeLabel
-        className="stepper-padding"
-      >
+        className="stepper-padding">
         {steps.map((label) => (
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
@@ -215,7 +219,11 @@ export const RegisterClient = () => {
                         type="text"
                         placeholder="Ingrese la calle"
                         name="calle"
-                        value={cliente.domicilios.length > 0 ? cliente.domicilios[0]?.calle : ""}
+                        value={
+                          cliente.domicilios.length > 0
+                            ? cliente.domicilios[0]?.calle
+                            : ""
+                        }
                         onChange={handleDomicilioChange}
                       />
                     </Form.Group>
@@ -228,7 +236,11 @@ export const RegisterClient = () => {
                         type="text"
                         placeholder="Ingrese la localidad"
                         name="idLocalidad"
-                        value={cliente.domicilios.length > 0 ? cliente.domicilios[0]?.idLocalidad : ""}
+                        value={
+                          cliente.domicilios.length > 0
+                            ? cliente.domicilios[0]?.idLocalidad
+                            : ""
+                        }
                         onChange={handleDomicilioChange}
                       />
                     </Form.Group>
@@ -243,7 +255,11 @@ export const RegisterClient = () => {
                         type="number"
                         placeholder="Ingrese el número"
                         name="numero"
-                        value={cliente.domicilios.length > 0 ? cliente.domicilios[0]?.numero : ""}
+                        value={
+                          cliente.domicilios.length > 0
+                            ? cliente.domicilios[0]?.numero
+                            : ""
+                        }
                         onChange={handleDomicilioChange}
                       />
                     </Form.Group>
@@ -256,7 +272,11 @@ export const RegisterClient = () => {
                         type="text"
                         placeholder="Ingrese su localidad"
                         name="nroDpto"
-                        value={cliente.domicilios.length > 0 ? cliente.domicilios[0]?.nroDpto : ""}
+                        value={
+                          cliente.domicilios.length > 0
+                            ? cliente.domicilios[0]?.nroDpto
+                            : ""
+                        }
                         onChange={handleDomicilioChange}
                       />
                     </Form.Group>
@@ -268,16 +288,14 @@ export const RegisterClient = () => {
               <Button
                 color="inherit"
                 disabled={activeStep === 0}
-                onClick={handleBack}
-              >
+                onClick={handleBack}>
                 Atrás
               </Button>
               <Box className="box-auto-flex" />
               <Button
                 onClick={handleNext}
                 variant="contained"
-                color={activeStep === steps.length - 1 ? "success" : "primary"}
-              >
+                color={activeStep === steps.length - 1 ? "success" : "primary"}>
                 {activeStep === steps.length - 1 ? "Registrarse" : "Siguiente"}
               </Button>
             </Box>

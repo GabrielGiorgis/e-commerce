@@ -18,13 +18,10 @@ import { AlertSnackbar } from "../../ui/AlertSnackbar/AlertSnackbar";
 import { AlertColor } from "@mui/material/Alert";
 import { SucursalService } from "../../../services/SucursalService";
 import { ISucursalShort } from "../../../types/ISucursalShort";
-import { ICliente } from "../../../types/ICliente";
-import { ClienteService } from "../../../services/ClienteService";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const pedidoService = new PedidoService(API_URL + "/pedido");
 const sucursalService = new SucursalService(API_URL + "/sucursal");
-const clienteService = new ClienteService(API_URL + "/cliente");
 
 const verifyArticulo = (item: ICartItem) => {
   if ((item.product as IArticulo).precioVenta !== undefined) {
@@ -109,25 +106,9 @@ export function Cart() {
   const [alert, setAlert] = useState<{ message: string; severity: AlertColor }>(
     { message: "", severity: "info" }
   );
-  const [cliente, setCliente] = useState<ICliente | null>(null);
 
   const navigate = useNavigate();
   const idUser = localStorage.getItem("idUser");
-
-  useEffect(() => {
-    const fetchClienteData = async () => {
-      if (idUser) {
-        try {
-          const clienteData = await clienteService.getByUserId(Number(idUser));
-          setCliente(clienteData);
-        } catch (error) {
-          console.error("Error al obtener datos del cliente:", error);
-        }
-      }
-    };
-
-    fetchClienteData();
-  }, [idUser]);
 
   const total = cart.reduce(
     (total, product) =>
@@ -245,8 +226,7 @@ export function Cart() {
       tipoEnvio: envio,
       formaPago: Pago,
       fechaPedido: new Date().toISOString(),
-      idDomicilio:
-        cliente && cliente.domicilios.length > 0 ? cliente.domicilios[0].id : 1,
+      idDomicilio: Number(localStorage.getItem("idUserDomicilio")),
       idSucursal: 1,
       factura: {
         fechaFacturacion: new Date().toISOString(),
@@ -350,8 +330,7 @@ export function Cart() {
       tipoEnvio: envio,
       formaPago: envio == "DELIVERY" ? "MERCADO_PAGO" : Pago,
       fechaPedido: new Date().toISOString(),
-      idDomicilio:
-        cliente && cliente.domicilios.length > 0 ? cliente.domicilios[0].id : 1,
+      idDomicilio: Number(localStorage.getItem("idUserDomicilio")),
       idSucursal: 1,
       factura: {
         fechaFacturacion: new Date().toISOString(),
