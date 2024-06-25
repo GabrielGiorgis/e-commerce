@@ -354,7 +354,11 @@ export const ModalDomicilio: React.FC<DomicilioModalProps> = ({
             }}>
             <Box sx={{ flex: "1 1 auto" }} />
             {selectedDomicilio != null && (
-              <Button variant="outlined" color="error" onClick={handleDelete}>
+              <Button
+                style={{ marginRight: "10px" }}
+                variant="outlined"
+                color="error"
+                onClick={handleDelete}>
                 Eliminar
               </Button>
             )}

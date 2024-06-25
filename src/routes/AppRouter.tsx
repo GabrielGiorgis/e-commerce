@@ -7,7 +7,6 @@ import { CartContextProvider } from "../components/context/CartContext";
 import "./AppRouter.css";
 import { LoginClient } from "../components/screens/UserCLient/LoginClient";
 import { RutaPrivada } from "../components/screens/UserCLient/RutaPrivada";
-import Sucursales from "../components/screens/Sucursales/Sucursales";
 import HistorialPedidos from "../components/screens/Pedidos/HistorialPedidos";
 import { Profile } from "../components/screens/Profile/Profile";
 import { RegisterClient } from "../components/screens/UserCLient/RegisterClient";
@@ -20,7 +19,6 @@ export const AppRouter = () => {
           <Header />
           <div className="main-content">
             <Routes>
-              <Route path="/sucursales" element={<Sucursales />} />
               <Route path="/login" element={<LoginClient />} />
               <Route path="/register" element={<RegisterClient />} />
               <Route path="/" element={<Home />} />

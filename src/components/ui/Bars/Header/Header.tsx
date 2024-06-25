@@ -58,7 +58,6 @@ export default function Header() {
   const handleLogout = () => {
     localStorage.removeItem("idUser");
     localStorage.removeItem("idUserDomicilio");
-    localStorage.removeItem("idSucursalEcommerce");
     handleMenuClose();
     navigate("/login");
   };
@@ -105,18 +104,7 @@ export default function Header() {
   );
 
   React.useEffect(() => {
-    const checkIdSucursal = () => {
-      if (!localStorage.getItem("idSucursalEcommerce")) {
-        if (
-          location.pathname !== "/login" &&
-          location.pathname !== "/carrito" &&
-          location.pathname !== "/register"
-        ) {
-          navigate("/sucursales");
-        }
-      } else if (location.pathname == "/sucursales") {
-        navigate("/");
-      }
+    const checkIdUser = () => {
       if (localStorage.getItem("idUser")) {
         if (location.pathname == "/login" || location.pathname == "/register") {
           navigate("/");
@@ -124,9 +112,9 @@ export default function Header() {
       }
     };
 
-    checkIdSucursal();
+    checkIdUser();
     return () => {
-      checkIdSucursal();
+      checkIdUser();
     };
   }, [location, navigate]);
 
