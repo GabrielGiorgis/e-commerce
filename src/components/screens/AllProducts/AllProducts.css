@@ -59,3 +59,14 @@
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
+.category-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 20px 0 0 20px;
+}
+
+.category-dropdown button {
+    border-radius: 10px;
+}
