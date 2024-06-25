@@ -8,7 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { useEffect, useState } from "react";
-import { ICliente } from "../../../types/ICliente";
+import { ICliente } from "../../../types/Cliente/ICliente";
 import { IPedidoPost } from "../../../types/Pedido/IPedidoPost";
 import { ClienteService } from "../../../services/ClienteService";
 import { format, isToday, isYesterday, differenceInDays } from "date-fns";
@@ -43,7 +43,7 @@ const HistorialPedidos = () => {
 
   const getRelativeDate = (date: string) => {
     const parsedDate = new Date(date);
-    parsedDate.setHours(parsedDate.getHours() + 3);
+    parsedDate.setHours(parsedDate.getHours());
     if (isToday(parsedDate)) {
       return "Hoy";
     } else if (isYesterday(parsedDate)) {

@@ -1,4 +1,4 @@
-import { ILocalidad } from "../ILocalidad";
+import { ILocalidad } from "../Localidad/ILocalidad";
 
 export interface IDomicilio {
   id: number;

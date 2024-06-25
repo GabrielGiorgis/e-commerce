@@ -201,7 +201,7 @@ export function Cart() {
       tipoEnvio: envio,
       formaPago: Pago,
       fechaPedido: new Date().toISOString(),
-      idDomicilio: 1,
+      idDomicilio: Number(localStorage.getItem("idUserDomicilio")),
       idSucursal: 1,
       factura: {
         fechaFacturacion: new Date().toISOString(),
@@ -282,7 +282,7 @@ export function Cart() {
       tipoEnvio: envio,
       formaPago: envio == "DELIVERY" ? "MERCADO_PAGO" : Pago,
       fechaPedido: new Date().toISOString(),
-      idDomicilio: 1,
+      idDomicilio: Number(localStorage.getItem("idUserDomicilio")),
       idSucursal: 1,
       factura: {
         fechaFacturacion: new Date().toISOString(),
