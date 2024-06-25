@@ -1,12 +1,11 @@
-import { Alert, AlertTitle, Box, IconButton, Stack } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import { useCart } from "../../../hooks/useCart";
 import CloseIcon from "@mui/icons-material/Close";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
-// import { CheckoutMP } from "../../checkout/CheckoutMP";
 import "./StyleSheets/StyleCart.css";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IPedidoPost } from "../../../types/Pedido/IPedidoPost";
 import { IDetallePedidoPost } from "../../../types/DetallePedido/IDetallePedidoPost";
 import { PedidoService } from "../../../services/PedidoService";
@@ -16,6 +15,7 @@ import { ICartItem } from "../../../types/Cart/ICartItem";
 import { IArticulo } from "../../../types/IArticulo";
 import { IPromocion } from "../../../types/IPromocion";
 import { AlertSnackbar } from "../../ui/AlertSnackbar/AlertSnackbar";
+import { AlertColor } from "@mui/material/Alert";
 import { SucursalService } from "../../../services/SucursalService";
 import { ISucursalShort } from "../../../types/ISucursalShort";
 
@@ -103,7 +103,9 @@ export function Cart() {
 
   const [envio, setEnvio] = useState<string>("DELIVERY");
   const [Pago, setPago] = useState<string>("EFECTIVO");
-  const [alert, setAlert] = useState({ message: "", severity: "" });
+  const [alert, setAlert] = useState<{ message: string; severity: AlertColor }>(
+    { message: "", severity: "info" }
+  );
 
   const navigate = useNavigate();
   const idUser = localStorage.getItem("idUser");
@@ -185,9 +187,32 @@ export function Cart() {
         }
       })
       .reduce((total, item) => total + item, 0);
-    //FORMATEO DE HORA ACTUAL
+
+    // Función auxiliar para calcular el tiempo de preparación de una promoción
+    const calcularTiempoPromocion = (promocion: IPromocion) => {
+      return promocion.promocionDetalles.reduce((total, detalle) => {
+        return total + (detalle.articulo.tiempoEstimadoMinutos || 0);
+      }, 0);
+    };
+
+    const tiempoPreparacionTotal = products.reduce((total, product) => {
+      if (verifyArticulo(product)) {
+        return (
+          total +
+          ((product.product as IArticulo).tiempoEstimadoMinutos || 0) *
+            product.amount
+        );
+      } else {
+        const tiempoPromocion = calcularTiempoPromocion(
+          product.product as IPromocion
+        );
+        return total + tiempoPromocion * product.amount;
+      }
+    }, 0);
+
+    // Calcular la hora estimada de finalización
     const now = new Date();
-    const future = new Date(now.getTime() + 30 * 60 * 1000);
+    const future = new Date(now.getTime() + tiempoPreparacionTotal * 60 * 1000);
     const hours = future.getHours().toString().padStart(2, "0");
     const minutes = future.getMinutes().toString().padStart(2, "0");
     const seconds = future.getSeconds().toString().padStart(2, "0");
@@ -266,9 +291,32 @@ export function Cart() {
         }
       })
       .reduce((total, item) => total + item, 0);
-    //FORMATEO DE HORA ACTUAL
+
+    // Función auxiliar para calcular el tiempo de preparación de una promoción
+    const calcularTiempoPromocion = (promocion: IPromocion) => {
+      return promocion.promocionDetalles.reduce((total, detalle) => {
+        return total + (detalle.articulo.tiempoEstimadoMinutos || 0);
+      }, 0);
+    };
+
+    const tiempoPreparacionTotal = products.reduce((total, product) => {
+      if (verifyArticulo(product)) {
+        return (
+          total +
+          ((product.product as IArticulo).tiempoEstimadoMinutos || 0) *
+            product.amount
+        );
+      } else {
+        const tiempoPromocion = calcularTiempoPromocion(
+          product.product as IPromocion
+        );
+        return total + tiempoPromocion * product.amount;
+      }
+    }, 0);
+
+    // Calcular la hora estimada de finalización
     const now = new Date();
-    const future = new Date(now.getTime() + 30 * 60 * 1000);
+    const future = new Date(now.getTime() + tiempoPreparacionTotal * 60 * 1000);
     const hours = future.getHours().toString().padStart(2, "0");
     const minutes = future.getMinutes().toString().padStart(2, "0");
     const seconds = future.getSeconds().toString().padStart(2, "0");
@@ -308,7 +356,7 @@ export function Cart() {
       } else {
         setAlert({
           message: "Su pedido fue creado con éxito.",
-          severity: "success",
+          severity: "success" as AlertColor,
         });
         setTimeout(() => {
           navigate("/");
@@ -319,7 +367,7 @@ export function Cart() {
       console.error(error);
       setAlert({
         message: "Ocurrio un error al crear su pedido.",
-        severity: "error",
+        severity: "error" as AlertColor,
       });
     }
   };
@@ -378,7 +426,8 @@ export function Cart() {
               <select
                 id="tipoEnvio"
                 value={envio}
-                onChange={(e) => setEnvio(e.target.value)}>
+                onChange={(e) => setEnvio(e.target.value)}
+              >
                 <option value="DELIVERY">Delivery</option>
                 <option value="TAKE_AWAY">Take away</option>
               </select>
@@ -389,7 +438,8 @@ export function Cart() {
                 id="formaPago"
                 name="formaPago"
                 value={Pago}
-                onChange={(e) => setPago(e.target.value)}>
+                onChange={(e) => setPago(e.target.value)}
+              >
                 {envio === "DELIVERY" ? (
                   <option value="MERCADO_PAGO">Mercado pago</option>
                 ) : (
