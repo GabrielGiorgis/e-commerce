@@ -22,6 +22,7 @@ export const Sales = () => {
     getPromociones();
   }, []);
 
+  if (promociones.length != 0) {
   return (
     <>
       {isLoading ? (
@@ -38,4 +39,5 @@ export const Sales = () => {
       )}
     </>
   );
+  }
 };

@@ -79,6 +79,7 @@ export const ModalProduct = ({
                         <span className="text-body" key={index}>
                           <b>{detalle.cantidad}x</b> -{" "}
                           {detalle.articulo?.denominacion}
+                          <br />
                         </span>
                       ))}
                     </>
