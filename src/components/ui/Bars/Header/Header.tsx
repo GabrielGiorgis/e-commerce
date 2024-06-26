@@ -58,7 +58,6 @@ export default function Header() {
   const handleLogout = () => {
     localStorage.removeItem("idUser");
     localStorage.removeItem("idUserDomicilio");
-    localStorage.removeItem("idSucursalEcommerce");
     handleMenuClose();
     navigate("/login");
   };
@@ -105,18 +104,7 @@ export default function Header() {
   );
 
   React.useEffect(() => {
-    const checkIdSucursal = () => {
-      if (!localStorage.getItem("idSucursalEcommerce")) {
-        if (
-          location.pathname !== "/login" &&
-          location.pathname !== "/carrito" &&
-          location.pathname !== "/register"
-        ) {
-          navigate("/sucursales");
-        }
-      } else if (location.pathname == "/sucursales") {
-        navigate("/");
-      }
+    const checkIdUser = () => {
       if (localStorage.getItem("idUser")) {
         if (location.pathname == "/login" || location.pathname == "/register") {
           navigate("/");
@@ -124,9 +112,9 @@ export default function Header() {
       }
     };
 
-    checkIdSucursal();
+    checkIdUser();
     return () => {
-      checkIdSucursal();
+      checkIdUser();
     };
   }, [location, navigate]);
 
@@ -213,7 +201,7 @@ export default function Header() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ bgcolor: "#6e0000" }}>
+      <AppBar position="fixed" sx={{ bgcolor: "#6e0000" }}>
         <Toolbar>
           <IconButton
             size="large"
@@ -228,16 +216,15 @@ export default function Header() {
               style={{ width: "24px", height: "24px" }}
             />
           </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
-            onClick={() => navigate("/")}>
-            Buen Sabor
-          </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          <Box
+            sx={{ display: { xs: "none", md: "flex", alignItems: "center" } }}>
+            <a className="header-links" href="#articulo">
+              Articulos
+            </a>
+            <a className="header-links" href="#promocion">
+              Promociones
+            </a>
             <IconButton
               size="large"
               aria-label="show 4 new mails"
@@ -271,7 +258,7 @@ export default function Header() {
           </Box>
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
+      <Toolbar /> {renderMobileMenu}
       {renderMenu}
     </Box>
   );

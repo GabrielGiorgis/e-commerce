@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from "react";
-// ---------- ARCHIVOS----------
 import { PaisService } from "../../../../services/PaisService";
 import { IDomicilioPost } from "../../../../types/Domicilio/IDomicilioPost";
 import { IPais } from "../../../../types/Pais/IPais";
 import { IProvincia } from "../../../../types/Provincia/IProvincia";
 import { ILocalidad } from "../../../../types/Localidad/ILocalidad";
-// ---------- ESTILOS ----------
 import { Modal, Form } from "react-bootstrap";
 import { Box, Button, Grid } from "@mui/material";
 import { IDomicilio } from "../../../../types/Domicilio/IDomicilio";
 import { DomicilioService } from "../../../../services/DomicilioService";
 
-// ------------------------------ CÓDIGO ------------------------------
 const API_URL = import.meta.env.VITE_API_URL;
 
-// ---------- INTERFAZ ----------
 interface DomicilioModalProps {
   show: boolean;
   handleClose: () => void;
@@ -22,14 +18,12 @@ interface DomicilioModalProps {
   selectedDomicilio?: IDomicilio;
 }
 
-// ------------------------------ COMPONENTE PRINCIPAL ------------------------------
 export const ModalDomicilio: React.FC<DomicilioModalProps> = ({
   show,
   handleClose,
   setDomicilios,
   selectedDomicilio,
 }) => {
-  // -------------------- STATES --------------------
   const [error, setError] = useState<string>("");
   const [domicilio, setDomicilio] = useState<IDomicilioPost>({
     calle: "",
@@ -45,11 +39,9 @@ export const ModalDomicilio: React.FC<DomicilioModalProps> = ({
   const [idProvincia, setIdProvincia] = useState<number>(0);
   const [localidades, setLocalidades] = useState<ILocalidad[]>([]);
 
-  // -------------------- SERVICES --------------------
   const domicilioService = new DomicilioService(API_URL + "/domicilio");
   const paisService = new PaisService(API_URL + "/pais");
 
-  // -------------------- HANDLERS --------------------
   const handlePaisChange = async (e: any) => {
     const selectedPaisId = Number(e.target.value);
     setDomicilio((prevState) => ({
@@ -123,7 +115,6 @@ export const ModalDomicilio: React.FC<DomicilioModalProps> = ({
     handleClose();
   };
 
-  // -------------------- FUNCIONES --------------------
   const fetchPaises = async () => {
     try {
       const response = await paisService.getAll();
@@ -153,6 +144,10 @@ export const ModalDomicilio: React.FC<DomicilioModalProps> = ({
     }
   };
 
+  const handleDelete = () => {
+    //agregar delete
+  };
+
   const handleSave = () => {
     if (selectedDomicilio) {
       return onUpdate();
@@ -176,13 +171,10 @@ export const ModalDomicilio: React.FC<DomicilioModalProps> = ({
     internalHandleClose();
   };
 
-  // BOTONES
-  // Determinar el texto del botón basado en las condiciones
   const getButtonText = () => {
     return selectedDomicilio != null ? "Actualizar" : "Guardar";
   };
 
-  // -------------------- EFFECTS --------------------
   useEffect(() => {
     fetchPaises();
     const fetchData = async () => {
@@ -213,7 +205,6 @@ export const ModalDomicilio: React.FC<DomicilioModalProps> = ({
     fetchData();
   }, [show]);
 
-  // -------------------- RENDER --------------------
   return (
     <>
       <Modal show={show} onHide={internalHandleClose} size="lg">
@@ -223,147 +214,135 @@ export const ModalDomicilio: React.FC<DomicilioModalProps> = ({
           </Modal.Title>
         </Modal.Header>
         <Modal.Body style={{ padding: "20px", backgroundColor: "#f8f9fa" }}>
-          <React.Fragment>
-            {error && (
-              <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>
-            )}
-            <Form>
-              <>
-                {/* CAMPOS DE DOMICILIO */}
-                <Form.Group controlId="formDomicilioCalle" className="mb-3">
-                  <Form.Label>Calle</Form.Label>
+          {error && (
+            <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>
+          )}
+          <Form>
+            <Form.Group controlId="formDomicilioCalle" className="mb-3">
+              <Form.Label>Calle</Form.Label>
+              <Form.Control
+                type="text"
+                value={domicilio.calle}
+                onChange={(e) =>
+                  setDomicilio({ ...domicilio, calle: e.target.value })
+                }
+              />
+            </Form.Group>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <Form.Group controlId="formDomicilioNumero" className="mb-3">
+                  <Form.Label>Número</Form.Label>
                   <Form.Control
-                    type="text"
-                    value={domicilio.calle}
+                    type="number"
+                    value={domicilio.numero}
                     onChange={(e) =>
-                      setDomicilio({ ...domicilio, calle: e.target.value })
+                      setDomicilio({
+                        ...domicilio,
+                        numero: Number(e.target.value),
+                      })
                     }
                   />
                 </Form.Group>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <Form.Group
-                      controlId="formDomicilioNumero"
-                      className="mb-3">
-                      <Form.Label>Número</Form.Label>
-                      <Form.Control
-                        type="number"
-                        value={domicilio.numero}
-                        onChange={(e) =>
-                          setDomicilio({
-                            ...domicilio,
-                            numero: Number(e.target.value),
-                          })
-                        }
-                      />
-                    </Form.Group>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Form.Group controlId="formDomicilioCp" className="mb-3">
-                      <Form.Label>Código Postal</Form.Label>
-                      <Form.Control
-                        type="number"
-                        value={domicilio.cp}
-                        onChange={(e) =>
-                          setDomicilio({
-                            ...domicilio,
-                            cp: Number(e.target.value),
-                          })
-                        }
-                      />
-                    </Form.Group>
-                  </Grid>
-                </Grid>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <Form.Group controlId="formDomicilioPiso" className="mb-3">
-                      <Form.Label>Piso</Form.Label>
-                      <Form.Control
-                        type="number"
-                        value={domicilio.piso}
-                        onChange={(e) =>
-                          setDomicilio({
-                            ...domicilio,
-                            piso: Number(e.target.value),
-                          })
-                        }
-                      />
-                    </Form.Group>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Form.Group
-                      controlId="formDomicilioNroDpto"
-                      className="mb-3">
-                      <Form.Label>Número Depto.</Form.Label>
-                      <Form.Control
-                        type="number"
-                        value={domicilio.nroDpto}
-                        onChange={(e) =>
-                          setDomicilio({
-                            ...domicilio,
-                            nroDpto: Number(e.target.value),
-                          })
-                        }
-                      />
-                    </Form.Group>
-                  </Grid>
-                </Grid>
-                <Grid container spacing={2}>
-                  <Grid item xs={4}>
-                    {/* PAIS */}
-                    <Form.Group controlId="formPais" className="mb-3">
-                      <Form.Label>País</Form.Label>
-                      <Form.Control
-                        as="select"
-                        value={idPais}
-                        onChange={handlePaisChange}>
-                        <option value={0}>Seleccionar País</option>
-                        {paises.map((pais) => (
-                          <option key={pais.id} value={pais.id}>
-                            {pais.nombre}
-                          </option>
-                        ))}
-                      </Form.Control>
-                    </Form.Group>
-                  </Grid>
-                  <Grid item xs={4}>
-                    {/* PROVINCIA */}
-                    <Form.Group controlId="formProvincia" className="mb-3">
-                      <Form.Label>Provincia</Form.Label>
-                      <Form.Control
-                        as="select"
-                        value={idProvincia}
-                        onChange={handleProvinciaChange}>
-                        <option value={0}>Seleccionar Provincia</option>
-                        {provincias.map((provincia) => (
-                          <option key={provincia.id} value={provincia.id}>
-                            {provincia.nombre}
-                          </option>
-                        ))}
-                      </Form.Control>
-                    </Form.Group>
-                  </Grid>
-                  <Grid item xs={4}>
-                    {/* LOCALIDAD */}
-                    <Form.Group controlId="formLocalidad" className="mb-3">
-                      <Form.Label>Localidad</Form.Label>
-                      <Form.Control
-                        as="select"
-                        value={domicilio.idLocalidad}
-                        onChange={handleLocalidadChange}>
-                        <option value={0}>Seleccionar Localidad</option>
-                        {localidades.map((localidad) => (
-                          <option key={localidad.id} value={localidad.id}>
-                            {localidad.nombre}
-                          </option>
-                        ))}
-                      </Form.Control>
-                    </Form.Group>
-                  </Grid>
-                </Grid>
-              </>
-            </Form>
-          </React.Fragment>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Form.Group controlId="formDomicilioCp" className="mb-3">
+                  <Form.Label>Código Postal</Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={domicilio.cp}
+                    onChange={(e) =>
+                      setDomicilio({
+                        ...domicilio,
+                        cp: Number(e.target.value),
+                      })
+                    }
+                  />
+                </Form.Group>
+              </Grid>
+            </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <Form.Group controlId="formDomicilioPiso" className="mb-3">
+                  <Form.Label>Piso</Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={domicilio.piso}
+                    onChange={(e) =>
+                      setDomicilio({
+                        ...domicilio,
+                        piso: Number(e.target.value),
+                      })
+                    }
+                  />
+                </Form.Group>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Form.Group controlId="formDomicilioNroDpto" className="mb-3">
+                  <Form.Label>Número Depto.</Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={domicilio.nroDpto}
+                    onChange={(e) =>
+                      setDomicilio({
+                        ...domicilio,
+                        nroDpto: Number(e.target.value),
+                      })
+                    }
+                  />
+                </Form.Group>
+              </Grid>
+            </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={4}>
+                <Form.Group controlId="formPais" className="mb-3">
+                  <Form.Label>País</Form.Label>
+                  <Form.Control
+                    as="select"
+                    value={idPais}
+                    onChange={handlePaisChange}>
+                    <option value={0}>Seleccionar País</option>
+                    {paises.map((pais) => (
+                      <option key={pais.id} value={pais.id}>
+                        {pais.nombre}
+                      </option>
+                    ))}
+                  </Form.Control>
+                </Form.Group>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Form.Group controlId="formProvincia" className="mb-3">
+                  <Form.Label>Provincia</Form.Label>
+                  <Form.Control
+                    as="select"
+                    value={idProvincia}
+                    onChange={handleProvinciaChange}>
+                    <option value={0}>Seleccionar Provincia</option>
+                    {provincias.map((provincia) => (
+                      <option key={provincia.id} value={provincia.id}>
+                        {provincia.nombre}
+                      </option>
+                    ))}
+                  </Form.Control>
+                </Form.Group>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Form.Group controlId="formLocalidad" className="mb-3">
+                  <Form.Label>Localidad</Form.Label>
+                  <Form.Control
+                    as="select"
+                    value={domicilio.idLocalidad}
+                    onChange={handleLocalidadChange}>
+                    <option value={0}>Seleccionar Localidad</option>
+                    {localidades.map((localidad) => (
+                      <option key={localidad.id} value={localidad.id}>
+                        {localidad.nombre}
+                      </option>
+                    ))}
+                  </Form.Control>
+                </Form.Group>
+              </Grid>
+            </Grid>
+          </Form>
         </Modal.Body>
         <Modal.Footer>
           <Box
@@ -374,6 +353,15 @@ export const ModalDomicilio: React.FC<DomicilioModalProps> = ({
               alignItems: "center",
             }}>
             <Box sx={{ flex: "1 1 auto" }} />
+            {selectedDomicilio != null && (
+              <Button
+                style={{ marginRight: "10px" }}
+                variant="outlined"
+                color="error"
+                onClick={handleDelete}>
+                Eliminar
+              </Button>
+            )}
             <Button
               variant="contained"
               color={selectedDomicilio != null ? "success" : "primary"}

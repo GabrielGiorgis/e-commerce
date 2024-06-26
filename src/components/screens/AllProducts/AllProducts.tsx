@@ -36,7 +36,6 @@ export const AllProducts = () => {
     try {
       const response = await fetch(`${API_URL}/categoria/ventas`);
       const data = await response.json();
-
       const formatedData = formatCategorias(data);
       setCategorias(formatedData);
     } catch (error) {
@@ -87,10 +86,6 @@ export const AllProducts = () => {
     setSortOrder(e.target.value);
   };
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCategory(e.target.value);
-  };
-
   const filteredArticulos = articulos
     .filter((articulo) => {
       const chosenCategory = categorias.find(
@@ -123,7 +118,7 @@ export const AllProducts = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="products-list-container">
+        <div id="articulo" className="products-list-container">
           <h1 className="title">Todos los artículos</h1>
           <div className="filters">
             <input
@@ -133,23 +128,6 @@ export const AllProducts = () => {
               onChange={handleSearchChange}
               className="search-input"
             />
-            {/* <div className="category-dropdown" style={{ marginRight: "1rem" }}>
-              <select
-                value={selectedCategory}
-                onChange={handleCategoryChange}
-                style={{ borderRadius: "0.5rem", padding: "0.5rem" }}>
-                <option value="">Todas las categorías</option>
-                {categorias.map((categoria) => (
-                  <option
-                    key={categoria.id}
-                    value={categoria.id.toString()}
-                    style={{ backgroundColor: "white", color: "black" }}>
-                    {categoria.denominacion}
-                  </option>
-                ))}
-              </select>
-            </div> */}
-
             <div className="sort-dropdown" style={{ marginRight: "1rem" }}>
               <select
                 value={sortOrder}
@@ -174,7 +152,11 @@ export const AllProducts = () => {
               return (
                 <Button
                   key={categoria.id}
-                  onClick={() => setSelectedCategory(categoria.id.toString())}
+                  onClick={() => {
+                    selectedCategory == categoria.id.toString()
+                      ? setSelectedCategory("")
+                      : setSelectedCategory(categoria.id.toString());
+                  }}
                   color="error"
                   variant={
                     selectedCategory &&

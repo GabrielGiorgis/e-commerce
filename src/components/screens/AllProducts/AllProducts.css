@@ -65,6 +65,7 @@
     align-items: center;
     gap: 1rem;
     margin: 20px 0 0 20px;
+    /* overflow-x: scroll; */
 }
 
 .category-dropdown button {

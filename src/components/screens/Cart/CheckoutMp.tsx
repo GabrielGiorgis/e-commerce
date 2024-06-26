@@ -83,7 +83,7 @@ export function CheckoutMp({ montoCarrito, pedido }: CheckoutMpProps) {
 
   useEffect(() => {
     const getSelectedSucursal = async () => {
-      const idSucursal = localStorage.getItem("idSucursalEcommerce");
+      const idSucursal = 1;
       if (idSucursal) {
         const sucursal = await sucursalService.getById(Number(idSucursal));
         if (sucursal) setSelectedSucursal(sucursal);

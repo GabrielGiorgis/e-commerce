@@ -27,7 +27,7 @@ export const Sales = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="products-list-container">
+        <div id="promocion" className="products-list-container">
           <h1 className="title">Promociones</h1>
           <ul className="products-list">
             {promociones.map((promocion, index) => (
