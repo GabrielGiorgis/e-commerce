@@ -355,14 +355,14 @@ export function Cart() {
         });
       } else {
         setAlert({
-          message: "Su pedido fue creado con éxito.",
+          message: "Su pedido fue creado con éxito. Se le enviará la factura a su email.",
           severity: "success" as AlertColor,
         });
-        // if (pedidoSave && pedidoSave.id) {
-        //   await pedidoService.sendFactura(pedidoSave.id);
-        // }else{
-        //   console.log("No se pudo enviar la factura");
-        // }
+        if (pedidoSave && pedidoSave.id) {
+          await pedidoService.sendFactura(pedidoSave.id);
+        }else{
+          console.log("No se pudo enviar la factura");
+        }
         setTimeout(() => {
           navigate("/");
           cleanCart();
