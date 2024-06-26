@@ -346,8 +346,8 @@ export function Cart() {
       detallePedidos: detallesPedido,
     };
     try {
-      await pedidoService.post(pedido);
-      if (pedido.estado === "RECHAZADO") {
+      const pedidoSave = await pedidoService.post(pedido);
+      if (pedidoSave.estado === "RECHAZADO") {
         setAlert({
           message:
             "Su pedido fue rechazado por falta de insumos, sepa disculpar.",
@@ -358,6 +358,11 @@ export function Cart() {
           message: "Su pedido fue creado con éxito.",
           severity: "success" as AlertColor,
         });
+        // if (pedidoSave && pedidoSave.id) {
+        //   await pedidoService.sendFactura(pedidoSave.id);
+        // }else{
+        //   console.log("No se pudo enviar la factura");
+        // }
         setTimeout(() => {
           navigate("/");
           cleanCart();
