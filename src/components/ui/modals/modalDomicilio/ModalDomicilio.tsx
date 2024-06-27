@@ -165,6 +165,7 @@ export const ModalDomicilio: React.FC<DomicilioModalProps> = ({
         selectedDomicilio.id,
         domicilio
       );
+      console.log(response);
     }
     internalHandleClose();
   };

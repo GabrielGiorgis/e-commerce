@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ICliente } from "../../../types/Cliente/ICliente";
 import "./RegisterClient.css";
 import { Box, Button, Grid, Step, StepLabel, Stepper } from "@mui/material";
 import { Form } from "react-bootstrap";

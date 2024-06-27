@@ -277,7 +277,6 @@ export const Profile = () => {
       <ModalDomicilio
         show={openModal}
         handleClose={() => setOpenModal(false)}
-        setDomicilios={setDomicilios}
       />
     </>
   );
