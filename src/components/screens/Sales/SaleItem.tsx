@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IPromocion } from "../../../types/IPromocion";
 import { useCart } from "../../../hooks/useCart";
 import { LoadingButton } from "@mui/lab";

@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ICliente } from "../../../types/ICliente";
+import { ICliente } from "../../../types/Cliente/ICliente";
 import "./RegisterClient.css";
 import { Box, Button, Grid, Step, StepLabel, Stepper } from "@mui/material";
 import { Form } from "react-bootstrap";
 import { ClienteService } from "../../../services/ClienteService";
+import { IClientePost } from "../../../types/Cliente/IClientePost";
 
 const steps = ["Datos Personales", "Domicilio"];
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const RegisterClient = () => {
-  const [cliente, setCliente] = useState<ICliente>({
+  const [cliente, setCliente] = useState<IClientePost>({
     nombre: "",
     apellido: "",
     telefono: "",
@@ -73,7 +74,7 @@ export const RegisterClient = () => {
     });
   };
 
-  const handleSubmit = (cliente: ICliente) => {
+  const handleSubmit = (cliente: IClientePost) => {
     // Validación básica
     if (
       cliente.nombre.trim() === "" ||

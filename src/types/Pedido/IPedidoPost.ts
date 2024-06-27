@@ -1,5 +1,4 @@
 import { IDetallePedidoPost } from "../DetallePedido/IDetallePedidoPost";
-import { IDomicilioPost } from "../Domicilio/IDomicilioPost";
 import { IFactura } from "../Factura/IFactura";
 
 export interface IPedidoPost {

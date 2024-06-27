@@ -14,7 +14,7 @@ import { ClienteService } from "../../../services/ClienteService";
 import { IDomicilioPost } from "../../../types/Domicilio/IDomicilioPost";
 import { IPedidoPost } from "../../../types/Pedido/IPedidoPost";
 import DomicilioCard from "./DomicilioCard";
-import { IDomicilio } from "../../../types/Domicilio";
+import { IDomicilio } from "../../../types/Domicilio/IDomicilio";
 import { ModalDomicilio } from "../../ui/modals/modalDomicilio/ModalDomicilio";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -258,7 +258,6 @@ export const Profile = () => {
                         Number(localStorage.getItem("idUserDomicilio"))
                   }
                   onSelect={() => handleDomicilioSelect(domicilio.id)}
-                  setDomicilios={setDomicilios}
                 />
               </Grid>
             ))}

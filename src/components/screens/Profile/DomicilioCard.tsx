@@ -16,17 +16,14 @@ interface DomicilioCardProps {
   domicilio: IDomicilio;
   isSelected: boolean;
   onSelect: () => void;
-  setDomicilios: React.Dispatch<React.SetStateAction<IDomicilio[]>>;
 }
 
 const DomicilioCard: React.FC<DomicilioCardProps> = ({
   domicilio,
   isSelected,
   onSelect,
-  setDomicilios,
 }) => {
   const [openModal, setOpenModal] = React.useState(false);
-  const [showEditButton, setShowEditButton] = React.useState(false);
 
   useEffect(() => {
     console.log(domicilio);
@@ -79,7 +76,6 @@ const DomicilioCard: React.FC<DomicilioCardProps> = ({
       <ModalDomicilio
         show={openModal}
         handleClose={() => setOpenModal(false)}
-        setDomicilios={() => {}}
         selectedDomicilio={domicilio}
       />
     </>

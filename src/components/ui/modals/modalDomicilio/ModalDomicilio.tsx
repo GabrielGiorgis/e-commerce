@@ -14,14 +14,12 @@ const API_URL = import.meta.env.VITE_API_URL;
 interface DomicilioModalProps {
   show: boolean;
   handleClose: () => void;
-  setDomicilios: React.Dispatch<React.SetStateAction<IDomicilio[]>>;
   selectedDomicilio?: IDomicilio;
 }
 
 export const ModalDomicilio: React.FC<DomicilioModalProps> = ({
   show,
   handleClose,
-  setDomicilios,
   selectedDomicilio,
 }) => {
   const [error, setError] = useState<string>("");

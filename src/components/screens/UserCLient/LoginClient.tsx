@@ -9,7 +9,6 @@ const API_URL = import.meta.env.VITE_API_URL;
 export const LoginClient = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
   const [error, setError] = useState<string>("");
 
   const [user, setUser] = useState<IUsuarioCliente>();
@@ -21,8 +20,7 @@ export const LoginClient = () => {
   useEffect(() => {
     setUser({
       userName: username,
-      password: password,
-      email: email,
+      password: password
     });
   }, [username, password]);
 

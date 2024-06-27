@@ -23,7 +23,7 @@ export function CheckoutMp({ montoCarrito, pedido }: CheckoutMpProps) {
   const [alert, setAlert] = useState<{ message: string; severity: AlertColor }>(
     {
       message: "",
-      severity: "",
+      severity: "success" as AlertColor,
     }
   );
 

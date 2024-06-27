@@ -355,7 +355,7 @@ export function Cart() {
         });
       } else {
         setAlert({
-          message: "Su pedido fue creado con éxito. Se le enviará la factura a su email.",
+          message: "Su pedido fue creado con éxito.",
           severity: "success" as AlertColor,
         });
         if (pedidoSave && pedidoSave.id) {
