@@ -147,7 +147,7 @@ export const AllProducts = () => {
               </select>
             </div>
           </div>
-          <div className="category-dropdown" style={{ marginRight: "1rem" }}>
+          <div className="category-buttons" style={{ marginRight: "1rem" }}>
             {categorias.map((categoria) => {
               return (
                 <Button

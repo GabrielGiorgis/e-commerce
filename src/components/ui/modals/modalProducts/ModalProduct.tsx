@@ -1,6 +1,5 @@
-import { Modal, Typography, IconButton } from "@mui/material";
+import { Modal, Typography } from "@mui/material";
 import "./ModalProduct.css";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { ICartItem } from "../../../../types/Cart/ICartItem";
 import { IArticulo } from "../../../../types/IArticulo";
 import { IPromocion } from "../../../../types/IPromocion";
@@ -87,11 +86,6 @@ export const ModalProduct = ({
                 }
                 return null;
               })()}
-            </div>
-            <div className="modal-footer">
-              <IconButton>
-                <ShoppingCartIcon />
-              </IconButton>
             </div>
           </div>
         </div>

@@ -58,7 +58,6 @@
 
 .text-body {
     font-size: 0.9em;
-    /* padding-bottom: 10px; */
 }
 
 
@@ -80,15 +79,15 @@
 
 .card-img:hover img {
     transform: scale(1.3);
-    /* box-shadow: rgba(226, 196, 63, 0.25) 0px 13px 47px -5px, rgba(180, 71, 71, 0.3) 0px 8px 16px -8px; */
 }
 
-@media (max-width: 400px) {
+@media (max-width: 425px) {
     .card {
-        width: 100%;
+        width: 80%;
         max-width: none;
         padding: 0.5em;
         box-shadow: none;
+        justify-content: center;
     }
     .card-img {
         height: auto;

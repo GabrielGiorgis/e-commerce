@@ -19,8 +19,8 @@ export const Home = () => {
         <Loader />
       ) : (
         <>
-            <AllProducts />
             <Sales />
+            <AllProducts />
         </>
       )}
     </div>
