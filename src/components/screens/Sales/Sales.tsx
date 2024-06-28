@@ -13,7 +13,6 @@ export const Sales = () => {
 
   const getPromociones = async () => {
     const promociones = await promocionesService.getAll();
-    console.log(promociones);
     setPromociones(promociones);
     setIsLoading(false);
   };

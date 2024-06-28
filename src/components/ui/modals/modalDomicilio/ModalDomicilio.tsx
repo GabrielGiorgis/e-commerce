@@ -154,18 +154,16 @@ export const ModalDomicilio: React.FC<DomicilioModalProps> = ({
   };
 
   const onSave = async () => {
-    const response = await domicilioService.post(domicilio);
-    console.log(response);
+    await domicilioService.post(domicilio);
     internalHandleClose();
   };
 
   const onUpdate = async () => {
     if (selectedDomicilio) {
-      const response = await domicilioService.put(
+      await domicilioService.put(
         selectedDomicilio.id,
         domicilio
       );
-      console.log(response);
     }
     internalHandleClose();
   };

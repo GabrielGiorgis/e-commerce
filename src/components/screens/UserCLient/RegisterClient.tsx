@@ -90,7 +90,6 @@ export const RegisterClient = () => {
       setError("Por favor, complete todos los campos");
       return;
     }
-    console.log("Cliente:", cliente);
     clienteService.post(cliente);
     // Reset error message
     setError("");

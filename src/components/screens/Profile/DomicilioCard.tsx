@@ -25,10 +25,6 @@ const DomicilioCard: React.FC<DomicilioCardProps> = ({
 }) => {
   const [openModal, setOpenModal] = React.useState(false);
 
-  useEffect(() => {
-    console.log(domicilio);
-  }, []);
-
   return (
     <>
       <Card

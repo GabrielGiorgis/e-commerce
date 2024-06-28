@@ -33,7 +33,6 @@ export const LoginClient = () => {
 
     try {
       const response = await usuarioService.login(user as IUsuarioCliente);
-      console.log(response);
       if (response) {
         const client = await clienteService.getByUserId(response.id);
         const idClient = client?.id;

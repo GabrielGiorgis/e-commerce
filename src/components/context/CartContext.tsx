@@ -29,8 +29,6 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
       const exists = prevCart.some(
         (item) => getUniqueKey(item) === getUniqueKey(product)
       );
-
-      console.log(`existe ${product.product.id}`, cart);
       if (exists) {
         return prevCart.map((item) =>
           getUniqueKey(item) === getUniqueKey(product)

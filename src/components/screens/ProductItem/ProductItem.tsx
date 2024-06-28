@@ -37,7 +37,6 @@ export const ProductItem = ({ product }: IProductItem) => {
   }, [item.amount]);
 
   useEffect(() => {
-    console.log("cart", cart);
     verifyEliminado();
   }, []);
 
@@ -111,7 +110,6 @@ export const ProductItem = ({ product }: IProductItem) => {
                 }
                 setLoading(true);
                 setTimeout(() => {
-                  console.log("added to cart", product);
                   addToCart({ product: product, amount: 1 });
                   setItem({ product: product, amount: 1 });
                   setLoading(false);
